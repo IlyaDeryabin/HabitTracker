@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HabitTracker</string>
+    <string name="add_habit">Добавить привычку</string>
+    <string name="title">Название</string>
+    <string name="description">Описание</string>
+    <string name="empty_list">Пустой список</string>
+    <string name="my_habits">Мои привычки</string>
+    <string name="habit_type">Тип привычки</string>
+    <string name="good">Хорошая</string>
+    <string name="bad">Плохая</string>
+    <string name="times">раз</string>
+    <string name="days">дней</string>
+    <string name="save_habit">Сохранить привычку</string>
+    <string name="habit_priority">Приоритет привычки</string>
+    <string name="high">Высокий</string>
+    <string name="medium">Умеренный</string>
+    <string name="low">Низкий</string>
+    <string name="amount">Количество</string>
+    <string name="frequency">Частота</string>
+    <string name="try_again">Попробовать ещё</string>
+    <string name="habit_editor">Редактор привычки</string>
+    <string name="fill_all_fields">Пожалуйста, заполните все поля.</string>
+    <string name="times_holder">%1$d раз</string>
+</resources>

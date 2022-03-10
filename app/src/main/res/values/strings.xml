@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">HabitTracker</string>
+    <string name="add_habit">Add habit</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="empty_list">Empty list</string>
+    <string name="my_habits">My habits</string>
+    <string name="habit_type">Habit type</string>
+    <string name="good">Good</string>
+    <string name="bad">Bad</string>
+    <string name="times">times</string>
+    <string name="days">days</string>
+    <string name="save_habit">Save habit</string>
+    <string name="habit_priority">Habit priority</string>
+    <string name="high">High</string>
+    <string name="medium">Medium</string>
+    <string name="low">Low</string>
+    <string name="amount">Amount</string>
+    <string name="frequency">Frequency</string>
+    <string name="try_again">Try again</string>
+    <string name="habit_editor">Habit editor</string>
+    <string name="rgb_text" translatable="false">RGB = %1$d, %2$d, %3$d</string>
+    <string name="hsv_text" translatable="false">HSV = %1$s, %2$s, %3$s</string>
+    <string name="fill_all_fields">Please, fill all the fields.</string>
+    <string name="times_holder">%1$d times</string>
+</resources>
