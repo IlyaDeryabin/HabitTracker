@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textfield.TextInputEditText
@@ -196,7 +197,7 @@ class HabitEditorFragment : Fragment() {
                     viewModel.uiAction.collect { action ->
                         when (action) {
                             HabitEditorAction.PopBackStack -> {
-                                // Stub
+                                findNavController().navigateUp()
                             }
                         }
                     }

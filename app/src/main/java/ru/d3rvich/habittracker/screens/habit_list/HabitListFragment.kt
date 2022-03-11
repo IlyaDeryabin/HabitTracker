@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.flow.collect
@@ -69,10 +70,14 @@ class HabitListFragment : Fragment() {
                     viewModel.uiAction.collect { action ->
                         when (action) {
                             HabitListAction.NavigateToHabitCreator -> {
-                                // Stub
+                                val navAction = HabitListFragmentDirections
+                                    .actionHabitListFragmentToHabitEditorFragment()
+                                findNavController().navigate(navAction)
                             }
                             is HabitListAction.NavigateToHabitEditor -> {
-                                // Stub
+                                val navAction = HabitListFragmentDirections
+                                    .actionHabitListFragmentToHabitEditorFragment(action.habitId)
+                                findNavController().navigate(navAction)
                             }
                             is HabitListAction.ShowToast -> {
                                 Toast.makeText(
