@@ -43,19 +43,11 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
     }
 
     private fun reduce(event: HabitEditorEvent, viewState: HabitEditorViewState.Loading) {
-        when (event) {
-            HabitEditorEvent.OnBackButtonPressed -> {
-                sendAction { HabitEditorAction.PopBackStack }
-            }
-            else -> unexpectedEventError(event, viewState)
-        }
+        unexpectedEventError(event, viewState)
     }
 
     private fun reduce(event: HabitEditorEvent, viewState: HabitEditorViewState.Creator) {
         when (event) {
-            HabitEditorEvent.OnBackButtonPressed -> {
-                sendAction { HabitEditorAction.PopBackStack }
-            }
             is HabitEditorEvent.OnSaveHabitPressed -> {
                 viewModelScope.launch {
                     setState(viewState.copy(isUploading = true))
@@ -69,9 +61,6 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
 
     private fun reduce(event: HabitEditorEvent, viewState: HabitEditorViewState.Editor) {
         when (event) {
-            HabitEditorEvent.OnBackButtonPressed -> {
-                sendAction { HabitEditorAction.PopBackStack }
-            }
             is HabitEditorEvent.OnSaveHabitPressed -> {
                 viewModelScope.launch {
                     setState(viewState.copy(habit = event.habit, isUploading = true))
@@ -85,9 +74,6 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
 
     private fun reduce(event: HabitEditorEvent, viewState: HabitEditorViewState.Error) {
         when (event) {
-            HabitEditorEvent.OnBackButtonPressed -> {
-                sendAction { HabitEditorAction.PopBackStack }
-            }
             HabitEditorEvent.OnReloadButtonPressed -> {
                 requireNotNull(habitId)
                 loadData(habitId!!)

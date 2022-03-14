@@ -5,6 +5,5 @@ import ru.d3rvich.habittracker.entity.HabitEntity
 
 sealed class HabitEditorEvent : UiEvent {
     object OnReloadButtonPressed : HabitEditorEvent()
-    object OnBackButtonPressed : HabitEditorEvent()
     class OnSaveHabitPressed(val habit: HabitEntity) : HabitEditorEvent()
 }

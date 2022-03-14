@@ -48,9 +48,6 @@ class HabitEditorFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbar.setNavigationOnClickListener {
-            viewModel.obtainEvent(HabitEditorEvent.OnBackButtonPressed)
-        }
         binding.errorView.errorButton.setOnClickListener {
             viewModel.obtainEvent(HabitEditorEvent.OnReloadButtonPressed)
         }

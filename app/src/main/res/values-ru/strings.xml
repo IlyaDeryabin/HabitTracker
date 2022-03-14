@@ -22,4 +22,6 @@
     <string name="habit_editor">Редактор привычки</string>
     <string name="fill_all_fields">Пожалуйста, заполните все поля.</string>
     <string name="times_holder">%1$d раз</string>
+    <string name="home_screen">Домашний экран</string>
+    <string name="about">О приложении</string>
 </resources>

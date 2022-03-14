@@ -23,4 +23,6 @@
     <string name="hsv_text" translatable="false">HSV = %1$s, %2$s, %3$s</string>
     <string name="fill_all_fields">Please, fill all the fields.</string>
     <string name="times_holder">%1$d times</string>
+    <string name="home_screen">Home screen</string>
+    <string name="about">About application</string>
 </resources>

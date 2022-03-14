@@ -6,22 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".screens.habit_editor.HabitEditorFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:viewBindingIgnore="true">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            style="@style/Widget.MaterialComponents.Toolbar.Surface"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
-            app:title="@string/habit_editor" />
-    </com.google.android.material.appbar.AppBarLayout>
-
     <include
         android:id="@+id/loading_view"
         layout="@layout/view_loading"
@@ -33,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_bar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <include
         android:id="@+id/error_view"
