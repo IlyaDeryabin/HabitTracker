@@ -12,7 +12,7 @@ import ru.d3rvich.habittracker.screens.habit_list.model.HabitListViewState
 
 class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, HabitListAction>() {
     override fun createInitialState(): HabitListViewState = HabitListViewState(
-        habitList = null,
+        habitList = emptyList(),
         isLoading = true
     )
 

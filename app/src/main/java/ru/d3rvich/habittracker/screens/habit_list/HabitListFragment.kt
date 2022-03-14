@@ -13,9 +13,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import ru.d3rvich.habittracker.adapters.HabitListAdapter
+import ru.d3rvich.habittracker.R
+import ru.d3rvich.habittracker.adapters.HabitListPagerAdapter
 import ru.d3rvich.habittracker.databinding.FragmentHabitListBinding
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListAction
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListEvent
@@ -24,16 +26,6 @@ import ru.d3rvich.habittracker.utils.isVisible
 class HabitListFragment : Fragment() {
     private val viewModel: HabitListViewModel by viewModels()
     private val binding: FragmentHabitListBinding by viewBinding(createMethod = CreateMethod.INFLATE)
-
-    private lateinit var habitListAdapter: HabitListAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        habitListAdapter = HabitListAdapter { habitId ->
-            viewModel.obtainEvent(HabitListEvent.OnHabitSelected(id = habitId))
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,8 +37,6 @@ class HabitListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.habitList.adapter = habitListAdapter
         binding.addHabitButton.setOnClickListener {
             viewModel.obtainEvent(HabitListEvent.OnAddHabitButtonClicked)
         }
@@ -54,16 +44,27 @@ class HabitListFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.uiState.collect { state ->
                         binding.progressIndicator.isVisible(state.isLoading)
-                        binding.habitList.isVisible(state.habitList != null && state.habitList.isNotEmpty())
-                        if (state.habitList != null) {
-                            binding.emptyListMessage.isVisible(state.habitList.isEmpty())
-                            habitListAdapter.submitList(state.habitList)
-                        }
+                        val pagerAdapter =
+                            HabitListPagerAdapter(this@HabitListFragment, state.habitList)
+                        binding.viewPager.adapter = pagerAdapter
+                        TabLayoutMediator(
+                            binding.tabLayout,
+                            binding.viewPager
+                        ) { tab, position ->
+                            when (position) {
+                                0 -> {
+                                    tab.text = getString(R.string.good)
+                                }
+                                else -> {
+                                    tab.text = getString(R.string.bad)
+                                }
+                            }
+                        }.attach()
                     }
                 }
                 launch {
