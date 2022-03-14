@@ -1,7 +1,6 @@
 package ru.d3rvich.habittracker.screens.habit_editor
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.view.setPadding
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -159,11 +159,11 @@ class HabitEditorFragment : Fragment() {
 
     private fun checkFields(): Boolean {
         with(binding.editorView) {
-            if (habitTitle.text == null) return false
-            if (habitDescription.text == null) return false
+            if (habitTitle.text.isNullOrEmpty()) return false
+            if (habitDescription.text.isNullOrEmpty()) return false
             if (!(goodTypeButton.isChecked || badTypeButton.isChecked)) return false
-            if (habitCount.text == null) return false
-            if (habitFrequency.text == null) return false
+            if (habitCount.text.isNullOrEmpty()) return false
+            if (habitFrequency.text.isNullOrEmpty()) return false
         }
         return true
     }

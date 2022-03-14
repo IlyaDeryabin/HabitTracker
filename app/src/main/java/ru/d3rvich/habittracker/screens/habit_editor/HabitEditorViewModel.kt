@@ -97,6 +97,6 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
     }
 
     companion object {
-        const val HABIT_ID_KEY = "habit_id"
+        const val HABIT_ID_KEY = "habitId"
     }
 }
