@@ -18,7 +18,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.d3rvich.habittracker.R
 import ru.d3rvich.habittracker.adapters.HabitListPagerAdapter
+import ru.d3rvich.habittracker.adapters.PagerItem
 import ru.d3rvich.habittracker.databinding.FragmentHabitListBinding
+import ru.d3rvich.habittracker.entity.HabitType
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListAction
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListEvent
 import ru.d3rvich.habittracker.utils.isVisible
@@ -26,11 +28,16 @@ import ru.d3rvich.habittracker.utils.isVisible
 class HabitListFragment : Fragment() {
     private val viewModel: HabitListViewModel by viewModels()
     private val binding: FragmentHabitListBinding by viewBinding(createMethod = CreateMethod.INFLATE)
+    private val pagerAdapter: HabitListPagerAdapter by lazy {
+        HabitListPagerAdapter { habitId ->
+            viewModel.obtainEvent(HabitListEvent.OnHabitSelected(habitId))
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return binding.root
     }
@@ -40,6 +47,7 @@ class HabitListFragment : Fragment() {
         binding.addHabitButton.setOnClickListener {
             viewModel.obtainEvent(HabitListEvent.OnAddHabitButtonClicked)
         }
+        binding.viewPager.adapter = pagerAdapter
         observeViewModel()
     }
 
@@ -49,9 +57,13 @@ class HabitListFragment : Fragment() {
                 launch {
                     viewModel.uiState.collect { state ->
                         binding.progressIndicator.isVisible(state.isLoading)
-                        val pagerAdapter =
-                            HabitListPagerAdapter(this@HabitListFragment, state.habitList)
-                        binding.viewPager.adapter = pagerAdapter
+                        val items = listOf(
+                            PagerItem(habits = state.habitList.filter { it.type == HabitType.Good },
+                                targetType = HabitType.Good),
+                            PagerItem(habits = state.habitList.filter { it.type == HabitType.Bad },
+                                targetType = HabitType.Bad)
+                        )
+                        pagerAdapter.submitList(items)
                         TabLayoutMediator(
                             binding.tabLayout,
                             binding.viewPager

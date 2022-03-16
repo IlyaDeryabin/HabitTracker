@@ -1,26 +1,57 @@
 package ru.d3rvich.habittracker.adapters
 
-import androidx.fragment.app.Fragment
-import androidx.viewpager2.adapter.FragmentStateAdapter
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import ru.d3rvich.habittracker.R
+import ru.d3rvich.habittracker.databinding.PagerItemBinding
 import ru.d3rvich.habittracker.entity.HabitEntity
 import ru.d3rvich.habittracker.entity.HabitType
-import ru.d3rvich.habittracker.screens.habit_list.views.TypedHabitListFragment
+import ru.d3rvich.habittracker.utils.isVisible
 
-class HabitListPagerAdapter(fragment: Fragment, private val habits: List<HabitEntity>) :
-    FragmentStateAdapter(fragment) {
+data class PagerItem(val targetType: HabitType, val habits: List<HabitEntity>)
 
-    override fun getItemCount(): Int = 2
+class HabitListPagerAdapter(private val onItemClick: (String) -> Unit) :
+    ListAdapter<PagerItem, HabitListPagerAdapter.ListViewHolder>(
+        AdapterDiffUtil()) {
 
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> {
-                val goodHabits = habits.filter { it.type == HabitType.Good }
-                TypedHabitListFragment.newInstance(goodHabits)
-            }
-            else -> {
-                val badHabits = habits.filter { it.type == HabitType.Bad }
-                TypedHabitListFragment.newInstance(badHabits)
-            }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.pager_item, parent, false)
+
+        return ListViewHolder(view, onItemClick)
+    }
+
+    override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
+        require(position < 3) { "Не должно быть больше двух объектов" }
+        holder.bind(getItem(position).habits)
+    }
+
+    class ListViewHolder(view: View, private val onItemClick: (String) -> Unit) :
+        RecyclerView.ViewHolder(view) {
+        private val binding = PagerItemBinding.bind(view)
+        private val adapter: HabitListAdapter by lazy { HabitListAdapter(onItemClick) }
+
+        init {
+            binding.habitList.adapter = adapter
+        }
+
+        fun bind(list: List<HabitEntity>) {
+            binding.habitList.isVisible(list.isNotEmpty())
+            binding.emptyListMessage.isVisible(list.isEmpty())
+            adapter.submitList(list)
+        }
+    }
+
+    class AdapterDiffUtil : DiffUtil.ItemCallback<PagerItem>() {
+        override fun areItemsTheSame(oldItem: PagerItem, newItem: PagerItem): Boolean {
+            return oldItem.targetType == newItem.targetType
+        }
+
+        override fun areContentsTheSame(oldItem: PagerItem, newItem: PagerItem): Boolean {
+            return oldItem == newItem
         }
     }
 }

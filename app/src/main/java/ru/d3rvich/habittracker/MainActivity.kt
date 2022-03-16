@@ -2,17 +2,14 @@ package ru.d3rvich.habittracker
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import ru.d3rvich.habittracker.callbacks.HabitListCallback
 import ru.d3rvich.habittracker.databinding.ActivityMainBinding
-import ru.d3rvich.habittracker.screens.habit_list.HabitListFragmentDirections
 
-class MainActivity : AppCompatActivity(), HabitListCallback {
+class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by viewBinding()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,11 +32,5 @@ class MainActivity : AppCompatActivity(), HabitListCallback {
             binding.drawer.close()
             true
         }
-    }
-
-    override fun onHabitClicked(habitId: String) {
-        val action =
-            HabitListFragmentDirections.actionHabitListFragmentToHabitEditorFragment(habitId)
-        findNavController(R.id.nav_host_fragment).navigate(action)
     }
 }
