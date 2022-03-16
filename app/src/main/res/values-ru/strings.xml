@@ -23,7 +23,12 @@
     <string name="fill_all_fields">Пожалуйста, заполните все поля.</string>
     <string name="times_holder">%1$d раз</string>
     <string name="home_screen">Домашний экран</string>
-    <string name="about">О приложении</string>
+    <string name="about_application_title">О приложении</string>
     <string name="pager_title_good">Хорошие</string>
     <string name="pager_title_bad">Плохие</string>
+    <string name="about_application">Следи за своими привычками.</string>
+    <string name="theme_setting">Настройка темы</string>
+    <string name="light">Светлая</string>
+    <string name="night">Тёмная</string>
+    <string name="system_default">По умолчанию</string>
 </resources>

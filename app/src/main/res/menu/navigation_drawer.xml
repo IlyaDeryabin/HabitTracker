@@ -10,6 +10,6 @@
         <item
             android:id="@+id/about_fragment"
             android:icon="@drawable/ic_baseline_info_24"
-            android:title="@string/about" />
+            android:title="@string/about_application_title" />
     </group>
 </menu>

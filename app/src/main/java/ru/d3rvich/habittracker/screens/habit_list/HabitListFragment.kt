@@ -48,6 +48,19 @@ class HabitListFragment : Fragment() {
             viewModel.obtainEvent(HabitListEvent.OnAddHabitButtonClicked)
         }
         binding.viewPager.adapter = pagerAdapter
+        TabLayoutMediator(
+            binding.tabLayout,
+            binding.viewPager
+        ) { tab, position ->
+            when (position) {
+                0 -> {
+                    tab.text = getString(R.string.pager_title_good)
+                }
+                else -> {
+                    tab.text = getString(R.string.pager_title_bad)
+                }
+            }
+        }.attach()
         observeViewModel()
     }
 
@@ -64,19 +77,6 @@ class HabitListFragment : Fragment() {
                                 targetType = HabitType.Bad)
                         )
                         pagerAdapter.submitList(items)
-                        TabLayoutMediator(
-                            binding.tabLayout,
-                            binding.viewPager
-                        ) { tab, position ->
-                            when (position) {
-                                0 -> {
-                                    tab.text = getString(R.string.pager_title_good)
-                                }
-                                else -> {
-                                    tab.text = getString(R.string.pager_title_bad)
-                                }
-                            }
-                        }.attach()
                     }
                 }
                 launch {

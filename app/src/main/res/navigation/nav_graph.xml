@@ -31,6 +31,6 @@
     <fragment
         android:id="@+id/about_fragment"
         android:name="ru.d3rvich.habittracker.screens.about.AboutFragment"
-        android:label="@string/about"
+        android:label="@string/about_application_title"
         tools:layout="@layout/fragment_about" />
 </navigation>

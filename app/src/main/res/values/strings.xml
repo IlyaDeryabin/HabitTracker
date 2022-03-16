@@ -24,7 +24,13 @@
     <string name="fill_all_fields">Please, fill all the fields.</string>
     <string name="times_holder">%1$d times</string>
     <string name="home_screen">Home screen</string>
-    <string name="about">About application</string>
+    <string name="about_application_title">About application</string>
     <string name="pager_title_good">Good</string>
     <string name="pager_title_bad">Bad</string>
+    <string name="developer_sign" translatable="false">\@d3rvich</string>
+    <string name="about_application">Control your habits.</string>
+    <string name="theme_setting">Theme setting</string>
+    <string name="light">Light</string>
+    <string name="night">Night</string>
+    <string name="system_default">System default</string>
 </resources>

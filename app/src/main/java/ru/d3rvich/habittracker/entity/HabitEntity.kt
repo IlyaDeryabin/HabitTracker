@@ -1,8 +1,5 @@
 package ru.d3rvich.habittracker.entity
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class HabitEntity(
     val id: String,
     val title: String,
