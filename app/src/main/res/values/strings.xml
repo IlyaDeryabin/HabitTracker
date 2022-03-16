@@ -33,4 +33,5 @@
     <string name="light">Light</string>
     <string name="night">Night</string>
     <string name="system_default">System default</string>
+    <string name="filter_label">Filter and sort</string>
 </resources>

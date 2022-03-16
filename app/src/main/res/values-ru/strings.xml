@@ -31,4 +31,5 @@
     <string name="light">Светлая</string>
     <string name="night">Тёмная</string>
     <string name="system_default">По умолчанию</string>
+    <string name="filter_label">Фильтр и сортировка</string>
 </resources>

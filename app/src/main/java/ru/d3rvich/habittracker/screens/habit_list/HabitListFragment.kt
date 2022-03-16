@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ import ru.d3rvich.habittracker.databinding.FragmentHabitListBinding
 import ru.d3rvich.habittracker.entity.HabitType
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListAction
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListEvent
+import ru.d3rvich.habittracker.screens.habit_list.view.FilterFragment
 import ru.d3rvich.habittracker.utils.isVisible
 
 class HabitListFragment : Fragment() {
@@ -39,6 +41,8 @@ class HabitListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        val fragment = FilterFragment()
+        childFragmentManager.beginTransaction().add(R.id.bottom_sheet, fragment).commit()
         return binding.root
     }
 
@@ -47,6 +51,22 @@ class HabitListFragment : Fragment() {
         binding.addHabitButton.setOnClickListener {
             viewModel.obtainEvent(HabitListEvent.OnAddHabitButtonClicked)
         }
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    binding.addHabitButton.animate().scaleX(0f).scaleY(0f).setDuration(300).start()
+                    binding.addHabitButton.isClickable = false
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    binding.addHabitButton.animate().scaleX(1f).scaleY(1f).setDuration(300).start()
+                    binding.addHabitButton.isClickable = true
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
         binding.viewPager.adapter = pagerAdapter
         TabLayoutMediator(
             binding.tabLayout,
