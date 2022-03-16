@@ -48,11 +48,12 @@ object HabitStore {
     }
 
     suspend fun editHabit(habit: HabitEntity) {
-        val toReplace = habits.find { it.id == habit.id }
-        checkNotNull(toReplace)
-        val index = habits.indexOf(toReplace)
-        check(index > -1) { "Habit not found" }
-        habits[index] = habit
+        val toRemove = habits.find { it.id == habit.id }
+        checkNotNull(toRemove)
+        val indexToRemove = habits.indexOf(toRemove)
+        check(indexToRemove > -1) { "Habit not found" }
+        habits.removeAt(indexToRemove)
+        habits.add(habit)
         habitsFlow.emit(habits.toList())
     }
 }
