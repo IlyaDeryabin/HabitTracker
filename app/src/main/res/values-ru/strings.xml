@@ -24,4 +24,6 @@
     <string name="times_holder">%1$d раз</string>
     <string name="home_screen">Домашний экран</string>
     <string name="about">О приложении</string>
+    <string name="pager_title_good">Хорошие</string>
+    <string name="pager_title_bad">Плохие</string>
 </resources>

@@ -70,10 +70,10 @@ class HabitListFragment : Fragment() {
                         ) { tab, position ->
                             when (position) {
                                 0 -> {
-                                    tab.text = getString(R.string.good)
+                                    tab.text = getString(R.string.pager_title_good)
                                 }
                                 else -> {
-                                    tab.text = getString(R.string.bad)
+                                    tab.text = getString(R.string.pager_title_bad)
                                 }
                             }
                         }.attach()

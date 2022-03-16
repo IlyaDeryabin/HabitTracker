@@ -22,9 +22,11 @@
 
         <TextView
             android:id="@+id/habit_priority"
-            style="@style/HabitListItemPriority"
+            style="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@id/habit_color"
             app:layout_constraintEnd_toEndOf="@id/habit_color"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,21 +35,25 @@
 
         <TextView
             android:id="@+id/habit_title"
-            style="@style/HabitListItemTitle"
+            style="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
             android:maxLines="1"
+            android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@id/habit_color"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Title" />
 
         <TextView
             android:id="@+id/habit_description"
-            style="@style/HabitListItemDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
             android:maxLines="1"
+            android:textSize="16sp"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@id/habit_color"
             app:layout_constraintTop_toBottomOf="@id/habit_title"
@@ -55,19 +61,22 @@
 
         <TextView
             android:id="@+id/habit_type"
-            style="@style/HabitListItemType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:textSize="20sp"
+            android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Habit Type" />
 
         <TextView
             android:id="@+id/habit_count"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/habit_type"
             tools:text="12 times in 3 days" />

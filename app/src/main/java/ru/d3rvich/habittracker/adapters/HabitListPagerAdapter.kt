@@ -15,8 +15,7 @@ import ru.d3rvich.habittracker.utils.isVisible
 data class PagerItem(val targetType: HabitType, val habits: List<HabitEntity>)
 
 class HabitListPagerAdapter(private val onItemClick: (String) -> Unit) :
-    ListAdapter<PagerItem, HabitListPagerAdapter.ListViewHolder>(
-        AdapterDiffUtil()) {
+    ListAdapter<PagerItem, HabitListPagerAdapter.ListViewHolder>(AdapterDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.pager_item, parent, false)
