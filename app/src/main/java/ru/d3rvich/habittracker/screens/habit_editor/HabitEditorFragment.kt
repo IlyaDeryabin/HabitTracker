@@ -209,6 +209,7 @@ class HabitEditorFragment : Fragment() {
             habitDescription.setTextIfFieldEmpty(habit.description)
             habitCount.setTextIfFieldEmpty(habit.count.toString())
             habitFrequency.setTextIfFieldEmpty(habit.frequency.toString())
+            habitPriority.setSelection(habit.priority)
             val hueIndex = gradient.findHuePositionByColor(habit.color)
             seekBar.progress = hueIndex
             when (habit.type) {
