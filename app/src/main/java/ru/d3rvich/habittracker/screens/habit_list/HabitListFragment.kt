@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -42,7 +43,9 @@ class HabitListFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         val fragment = FilterFragment()
-        childFragmentManager.beginTransaction().add(R.id.bottom_sheet, fragment).commit()
+        childFragmentManager.commit {
+            replace(R.id.bottom_sheet, fragment)
+        }
         return binding.root
     }
 
@@ -72,14 +75,9 @@ class HabitListFragment : Fragment() {
             binding.tabLayout,
             binding.viewPager
         ) { tab, position ->
-            when (position) {
-                0 -> {
-                    tab.text = getString(R.string.pager_title_good)
-                }
-                else -> {
-                    tab.text = getString(R.string.pager_title_bad)
-                }
-            }
+            val tabs =
+                arrayOf(R.string.pager_title_good, R.string.pager_title_bad).map { getString(it) }
+            tab.text = tabs[position]
         }.attach()
         observeViewModel()
     }

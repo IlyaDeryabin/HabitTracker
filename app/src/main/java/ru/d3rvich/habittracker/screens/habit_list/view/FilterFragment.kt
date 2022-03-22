@@ -28,7 +28,8 @@ class FilterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.filterInputText.doAfterTextChanged { text: Editable? ->
+        binding.filterInputText.editText?.setText(viewModel.currentState.filterConfig.filterText)
+        binding.filterInputText.editText?.doAfterTextChanged { text: Editable? ->
             text?.let {
                 viewModel.obtainEvent(HabitListEvent.OnFilterChange(text.toString()))
             }
