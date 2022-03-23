@@ -37,10 +37,12 @@ class HabitEditorFragment : Fragment() {
     private val gradient = HSVGradient()
 
     private var habitId: String? = null
+    private var creationTime: Long? = null
+    private var doneDates: List<Long>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return binding.root
     }
@@ -97,7 +99,7 @@ class HabitEditorFragment : Fragment() {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
                     progress: Int,
-                    fromUser: Boolean
+                    fromUser: Boolean,
                 ) {
                     writeColorText(progress)
                     binding.editorView.colorView.setBackgroundColor(gradient.getColorAt(progress))
@@ -141,7 +143,7 @@ class HabitEditorFragment : Fragment() {
                 }
             }
             return HabitEntity(
-                id = if (habitId == null) UUID.randomUUID().toString() else habitId!!,
+                id = habitId ?: UUID.randomUUID().toString(),
                 title = habitTitle.text.toString(),
                 description = habitDescription.text.toString(),
                 type = habitType,
@@ -149,7 +151,8 @@ class HabitEditorFragment : Fragment() {
                 frequency = habitFrequency.text.toString().toInt(),
                 priority = habitPriority.selectedItemPosition,
                 color = gradient.getColorAt(seekBar.progress),
-                date = System.currentTimeMillis()
+                date = creationTime ?: System.currentTimeMillis(),
+                doneDates = doneDates ?: emptyList()
             )
         }
     }
@@ -179,6 +182,8 @@ class HabitEditorFragment : Fragment() {
                                 showEditor(viewState.isUploading)
                                 setupHabit(viewState.habit)
                                 habitId = viewState.habit.id
+                                creationTime = viewState.habit.date
+                                doneDates = viewState.habit.doneDates
                             }
                             is HabitEditorViewState.Error -> {
                                 binding.errorView.root.isVisible(true)
