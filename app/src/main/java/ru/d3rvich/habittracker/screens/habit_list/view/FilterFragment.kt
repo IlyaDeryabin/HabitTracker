@@ -5,8 +5,8 @@ import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -39,34 +39,29 @@ class FilterFragment : Fragment() {
                 viewModel.obtainEvent(HabitListEvent.OnFilterChange(text.toString()))
             }
         }
-        configureSortingSelector()
+        configureSortingSelector(viewModel.currentState.filterConfig.sortingEngine as HabitSortingVariants)
         configureSortingDirectionSelection()
     }
 
-    private fun configureSortingSelector() {
+    private fun configureSortingSelector(initialSortingMethod: HabitSortingVariants) {
         val sortingList = arrayOf(R.string.no_sorting to HabitSortingVariants.None,
             R.string.by_title to HabitSortingVariants.ByTitle,
             R.string.by_priority to HabitSortingVariants.ByPriority,
             R.string.by_creation_time to HabitSortingVariants.ByCreatedTime).map { getString(it.first) to it.second }
         val adapter =
             ArrayAdapter(requireContext(), R.layout.list_item, sortingList.map { it.first })
-        with(binding.sortingSelector) {
-            this.adapter = adapter
-            onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parentView: AdapterView<*>?,
-                        selectedItemView: View?,
-                        position: Int,
-                        id: Long,
-                    ) {
-                        val selectedItem = sortingList[position]
-                        viewModel.obtainEvent(HabitListEvent.OnSortingMethodChange(selectedItem.second))
-                    }
-
-                    override fun onNothingSelected(parentView: AdapterView<*>?) {
-                    }
+        with(binding.sortingSelector.editText as? AutoCompleteTextView) {
+            this?.let {
+                val selectedItemText = sortingList.find { it.second == initialSortingMethod }
+                selectedItemText?.let {
+                    setText(selectedItemText.first)
                 }
+                setAdapter(adapter)
+                setOnItemClickListener { _, _, index, _ ->
+                    val selectedItem = sortingList[index]
+                    viewModel.obtainEvent(HabitListEvent.OnSortingMethodChange(selectedItem.second))
+                }
+            }
         }
     }
 
@@ -82,14 +77,12 @@ class FilterFragment : Fragment() {
         binding.sortingDirectionGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
             when (checkedId) {
                 R.id.sorting_ascending_button -> {
-                    binding.sortingAscendingButton.isChecked = isChecked
-                    if (binding.sortingAscendingButton.isChecked) {
+                    if (isChecked) {
                         viewModel.obtainEvent(HabitListEvent.OnSortDirectionChange(SortDirection.ByAscending))
                     }
                 }
                 R.id.sorting_descending_button -> {
-                    binding.sortingDescendingButton.isChecked = isChecked
-                    if (binding.sortingDescendingButton.isChecked) {
+                    if (isChecked) {
                         viewModel.obtainEvent(HabitListEvent.OnSortDirectionChange(SortDirection.ByDescending))
                     }
                 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
@@ -33,14 +34,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_marginStart="20dp"
-        android:text="@string/sorting"
-        android:layout_marginTop="16dp"
-        android:textStyle="italic"
-        android:layout_marginBottom="8dp"
-        android:textAppearance="?attr/textAppearanceBody1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/sorting"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textStyle="italic" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,17 +49,27 @@
         android:layout_marginBottom="20dp"
         android:orientation="horizontal">
 
-        <Spinner
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/sorting_selector"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1" />
+            android:layout_marginStart="4dp"
+            android:layout_weight="1">
+
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:inputType="none"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/sorting_direction_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_marginHorizontal="8dp"
             app:selectionRequired="true"
             app:singleSelection="true">
