@@ -35,6 +35,9 @@ class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, Hab
             is HabitListEvent.OnSortDirectionChange -> {
                 updateViewState(currentState.filterConfig.copy(sortDirection = event.direction))
             }
+            is HabitListEvent.OnDeleteHabit -> {
+                removeHabit(event.id)
+            }
         }
     }
 
@@ -57,5 +60,11 @@ class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, Hab
             habitList = filterConfig.execute(localHabits),
             isLoading = false,
             filterConfig = filterConfig))
+    }
+
+    private fun removeHabit(habitId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            HabitStore.deleteHabit(habitId)
+        }
     }
 }

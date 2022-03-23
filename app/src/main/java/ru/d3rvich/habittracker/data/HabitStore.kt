@@ -39,6 +39,13 @@ object HabitStore {
         return habitsFlow.asSharedFlow()
     }
 
+    suspend fun deleteHabit(id: String) {
+        val habitToRemove = habits.find { it.id == id }
+        checkNotNull(habitToRemove)
+        habits.remove(habitToRemove)
+        habitsFlow.emit(habits.toList())
+    }
+
     suspend fun getHabitBy(id: String): HabitEntity {
         delay(1) // Оправдываю suspend
         val habit = habits.find { it.id == id }

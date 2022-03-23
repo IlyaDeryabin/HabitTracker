@@ -26,15 +26,20 @@ import ru.d3rvich.habittracker.entity.HabitType
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListAction
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListEvent
 import ru.d3rvich.habittracker.screens.habit_list.view.FilterFragment
+import ru.d3rvich.habittracker.screens.habit_list.view.RemoveHabitDialog
 import ru.d3rvich.habittracker.utils.isVisible
 
 class HabitListFragment : Fragment() {
     private val viewModel: HabitListViewModel by viewModels()
     private val binding: FragmentHabitListBinding by viewBinding(createMethod = CreateMethod.INFLATE)
     private val pagerAdapter: HabitListPagerAdapter by lazy {
-        HabitListPagerAdapter { habitId ->
+        HabitListPagerAdapter(onItemClick = { habitId ->
             viewModel.obtainEvent(HabitListEvent.OnHabitSelected(habitId))
-        }
+        }, onLongClick = {
+            RemoveHabitDialog {
+                viewModel.obtainEvent(HabitListEvent.OnDeleteHabit(it))
+            }.show(childFragmentManager, RemoveHabitDialog.TAG)
+        })
     }
 
     override fun onCreateView(

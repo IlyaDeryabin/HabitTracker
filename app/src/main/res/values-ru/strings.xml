@@ -38,4 +38,8 @@
     <string name="no_sorting">Без сортировки</string>
     <string name="search">Поиск</string>
     <string name="sorting">Сортировка</string>
+    <string name="cancel">Отмена</string>
+    <string name="confirm">Подвердить</string>
+    <string name="delete_habit">Удалить привычку?</string>
+    <string name="remove_message">Это действие отменить невозможно.</string>
 </resources>
