@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.d3rvich.habittracker.base.BaseViewModel
-import ru.d3rvich.habittracker.data.HabitStore
+import ru.d3rvich.habittracker.data.HabitRepository
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorAction
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorEvent
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorViewState
@@ -37,7 +37,7 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
 
     private fun loadData(habitId: String) {
         viewModelScope.launch {
-            val habit = HabitStore.getHabitBy(habitId)
+            val habit = HabitRepository.get().getHabitBy(habitId)
             setState(HabitEditorViewState.Editor(habit))
         }
     }
@@ -51,7 +51,7 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
             is HabitEditorEvent.OnSaveHabitPressed -> {
                 viewModelScope.launch {
                     setState(viewState.copy(isUploading = true))
-                    HabitStore.addHabit(event.habit)
+                    HabitRepository.get().addHabit(event.habit)
                     sendAction { HabitEditorAction.PopBackStack }
                 }
             }
@@ -64,7 +64,7 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
             is HabitEditorEvent.OnSaveHabitPressed -> {
                 viewModelScope.launch {
                     setState(viewState.copy(habit = event.habit, isUploading = true))
-                    HabitStore.editHabit(event.habit)
+                    HabitRepository.get().editHabit(event.habit)
                     sendAction { HabitEditorAction.PopBackStack }
                 }
             }

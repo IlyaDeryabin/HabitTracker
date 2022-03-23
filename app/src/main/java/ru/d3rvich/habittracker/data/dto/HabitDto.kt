@@ -38,6 +38,9 @@ class HabitConverters {
 
     @TypeConverter
     fun toDoneDates(data: String): List<Long> {
+        if (data.isEmpty()) {
+            return emptyList()
+        }
         return data.split(separator).map { it.toLong() }
     }
 }

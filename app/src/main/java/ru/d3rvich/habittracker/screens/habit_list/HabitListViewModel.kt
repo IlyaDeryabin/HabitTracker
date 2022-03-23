@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.d3rvich.habittracker.base.BaseViewModel
-import ru.d3rvich.habittracker.data.HabitStore
+import ru.d3rvich.habittracker.data.HabitRepository
 import ru.d3rvich.habittracker.entity.HabitEntity
 import ru.d3rvich.habittracker.screens.habit_list.model.*
 
@@ -48,7 +48,7 @@ class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, Hab
     private fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
             setState(currentState.copy(isLoading = true))
-            HabitStore.getHabits().collect { habits ->
+            HabitRepository.get().getHabits().collect { habits ->
                 localHabits = habits
                 updateViewState(currentState.filterConfig)
             }
@@ -64,7 +64,7 @@ class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, Hab
 
     private fun removeHabit(habitId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            HabitStore.deleteHabit(habitId)
+            HabitRepository.get().deleteHabit(localHabits.find { it.id == habitId }!!)
         }
     }
 }
