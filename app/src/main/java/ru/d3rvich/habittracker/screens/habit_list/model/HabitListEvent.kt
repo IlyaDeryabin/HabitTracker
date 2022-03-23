@@ -6,4 +6,6 @@ sealed class HabitListEvent : UiEvent {
     object OnAddHabitButtonClicked : HabitListEvent()
     class OnHabitSelected(val id: String) : HabitListEvent()
     class OnFilterChange(val filterText: String) : HabitListEvent()
+    class OnSortingMethodChange(val comparator: HabitSortingEngine) : HabitListEvent()
+    class OnSortDirectionChange(val direction: SortDirection) : HabitListEvent()
 }

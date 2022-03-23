@@ -34,4 +34,10 @@
     <string name="night">Night</string>
     <string name="system_default">System default</string>
     <string name="filter_label">Filter and sort</string>
+    <string name="by_creation_time">By creation time</string>
+    <string name="by_priority">By priority</string>
+    <string name="by_title">By title</string>
+    <string name="no_sorting">No sorting</string>
+    <string name="search">Search</string>
+    <string name="sorting">Sorting</string>
 </resources>

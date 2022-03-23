@@ -32,4 +32,10 @@
     <string name="night">Тёмная</string>
     <string name="system_default">По умолчанию</string>
     <string name="filter_label">Фильтр и сортировка</string>
+    <string name="by_creation_time">По времени создания</string>
+    <string name="by_priority">По приоритету</string>
+    <string name="by_title">По названию</string>
+    <string name="no_sorting">Без сортировки</string>
+    <string name="search">Поиск</string>
+    <string name="sorting">Сортировка</string>
 </resources>

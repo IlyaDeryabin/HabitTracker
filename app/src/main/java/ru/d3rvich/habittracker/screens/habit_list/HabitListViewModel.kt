@@ -7,10 +7,7 @@ import kotlinx.coroutines.launch
 import ru.d3rvich.habittracker.base.BaseViewModel
 import ru.d3rvich.habittracker.data.HabitStore
 import ru.d3rvich.habittracker.entity.HabitEntity
-import ru.d3rvich.habittracker.screens.habit_list.model.FilterConfig
-import ru.d3rvich.habittracker.screens.habit_list.model.HabitListAction
-import ru.d3rvich.habittracker.screens.habit_list.model.HabitListEvent
-import ru.d3rvich.habittracker.screens.habit_list.model.HabitListViewState
+import ru.d3rvich.habittracker.screens.habit_list.model.*
 
 class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, HabitListAction>() {
     override fun createInitialState(): HabitListViewState = HabitListViewState(
@@ -30,7 +27,13 @@ class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, Hab
                 sendAction { HabitListAction.NavigateToHabitEditor(event.id) }
             }
             is HabitListEvent.OnFilterChange -> {
-                updateViewState(event.filterText)
+                updateViewState(currentState.filterConfig.copy(filterText = event.filterText))
+            }
+            is HabitListEvent.OnSortingMethodChange -> {
+                updateViewState(currentState.filterConfig.copy(sortingEngine = event.comparator))
+            }
+            is HabitListEvent.OnSortDirectionChange -> {
+                updateViewState(currentState.filterConfig.copy(sortDirection = event.direction))
             }
         }
     }
@@ -44,17 +47,15 @@ class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, Hab
             setState(currentState.copy(isLoading = true))
             HabitStore.getHabits().collect { habits ->
                 localHabits = habits
-                updateViewState(currentState.filterConfig.filterText)
+                updateViewState(currentState.filterConfig)
             }
         }
     }
 
-    private fun updateViewState(searchText: String) {
+    private fun updateViewState(filterConfig: FilterConfig) {
         setState(HabitListViewState(
-            habitList = localHabits.filter {
-                it.title.contains(searchText, ignoreCase = true)
-            },
+            habitList = filterConfig.execute(localHabits),
             isLoading = false,
-            filterConfig = currentState.filterConfig.copy(filterText = searchText)))
+            filterConfig = filterConfig))
     }
 }
