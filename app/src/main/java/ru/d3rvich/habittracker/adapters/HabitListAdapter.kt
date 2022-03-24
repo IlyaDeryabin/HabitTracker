@@ -42,7 +42,7 @@ class HabitListAdapter(private val onItemClick: (String) -> Unit) :
                     }
                     setTextColor(textColor)
                 }
-                habitCount.text = view.context.getString(R.string.times_holder, habit.frequency)
+                habitCount.text = view.context.getString(R.string.times_holder, habit.count)
 
                 habitItem.setOnClickListener {
                     onItemClick(habit.id)

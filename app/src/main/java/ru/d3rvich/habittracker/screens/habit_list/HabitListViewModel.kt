@@ -1,9 +1,10 @@
 package ru.d3rvich.habittracker.screens.habit_list
 
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.stateIn
 import ru.d3rvich.habittracker.base.BaseViewModel
 import ru.d3rvich.habittracker.data.HabitStore
 import ru.d3rvich.habittracker.entity.HabitEntity
@@ -11,12 +12,15 @@ import ru.d3rvich.habittracker.screens.habit_list.model.*
 
 class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, HabitListAction>() {
     override fun createInitialState(): HabitListViewState = HabitListViewState(
-        habitList = emptyList(),
+        habitList = null,
         isLoading = true,
         filterConfig = FilterConfig.Empty
     )
 
-    private var localHabits: List<HabitEntity> = emptyList()
+    private val habitsFlow = HabitStore.getHabits()
+        .stateIn(CoroutineScope(context = SupervisorJob() + Dispatchers.IO),
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null)
 
     override fun obtainEvent(event: HabitListEvent) {
         when (event) {
@@ -45,17 +49,21 @@ class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, Hab
     private fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
             setState(currentState.copy(isLoading = true))
-            HabitStore.getHabits().collect { habits ->
-                localHabits = habits
-                updateViewState(currentState.filterConfig)
+            habitsFlow.collect { habits ->
+                updateViewState(currentState.filterConfig, habits)
             }
         }
     }
 
-    private fun updateViewState(filterConfig: FilterConfig) {
-        setState(HabitListViewState(
-            habitList = filterConfig.execute(localHabits),
-            isLoading = false,
-            filterConfig = filterConfig))
+    private fun updateViewState(
+        filterConfig: FilterConfig,
+        habits: List<HabitEntity>? = habitsFlow.value,
+    ) {
+        habits?.let {
+            setState(HabitListViewState(
+                habitList = filterConfig.execute(habits),
+                isLoading = false,
+                filterConfig = filterConfig))
+        }
     }
 }

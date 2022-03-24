@@ -12,7 +12,7 @@ import ru.d3rvich.habittracker.entity.HabitEntity
 import ru.d3rvich.habittracker.entity.HabitType
 import ru.d3rvich.habittracker.utils.isVisible
 
-data class PagerItem(val targetType: HabitType, val habits: List<HabitEntity>)
+data class PagerItem(val targetType: HabitType, val habits: List<HabitEntity>?)
 
 class HabitListPagerAdapter(private val onItemClick: (String) -> Unit) :
     ListAdapter<PagerItem, HabitListPagerAdapter.ListViewHolder>(AdapterDiffUtil()) {
@@ -37,10 +37,17 @@ class HabitListPagerAdapter(private val onItemClick: (String) -> Unit) :
             binding.habitList.adapter = adapter
         }
 
-        fun bind(list: List<HabitEntity>) {
-            binding.habitList.isVisible(list.isNotEmpty())
-            binding.emptyListMessage.isVisible(list.isEmpty())
-            adapter.submitList(list)
+        fun bind(list: List<HabitEntity>?) {
+            with(binding) {
+                if (list == null) {
+                    habitList.isVisible(false)
+                    emptyListMessage.isVisible(false)
+                } else {
+                    emptyListMessage.isVisible(list.isEmpty())
+                    habitList.isVisible(list.isNotEmpty())
+                    adapter.submitList(list)
+                }
+            }
         }
     }
 
