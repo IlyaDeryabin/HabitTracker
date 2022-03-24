@@ -7,7 +7,10 @@ import kotlinx.coroutines.launch
 import ru.d3rvich.habittracker.base.BaseViewModel
 import ru.d3rvich.habittracker.data.HabitRepository
 import ru.d3rvich.habittracker.entity.HabitEntity
-import ru.d3rvich.habittracker.screens.habit_list.model.*
+import ru.d3rvich.habittracker.screens.habit_list.model.FilterConfig
+import ru.d3rvich.habittracker.screens.habit_list.model.HabitListAction
+import ru.d3rvich.habittracker.screens.habit_list.model.HabitListEvent
+import ru.d3rvich.habittracker.screens.habit_list.model.HabitListViewState
 
 class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, HabitListAction>() {
     override fun createInitialState(): HabitListViewState = HabitListViewState(
@@ -16,6 +19,7 @@ class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, Hab
         filterConfig = FilterConfig.Empty
     )
 
+    private val habitRepository: HabitRepository by lazy { HabitRepository.get() }
     private var localHabits: List<HabitEntity> = emptyList()
 
     override fun obtainEvent(event: HabitListEvent) {
@@ -48,7 +52,7 @@ class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, Hab
     private fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
             setState(currentState.copy(isLoading = true))
-            HabitRepository.get().getHabits().collect { habits ->
+            habitRepository.getHabits().collect { habits ->
                 localHabits = habits
                 updateViewState(currentState.filterConfig)
             }
@@ -64,7 +68,9 @@ class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, Hab
 
     private fun removeHabit(habitId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            HabitRepository.get().deleteHabit(localHabits.find { it.id == habitId }!!)
+            currentState.habitList.find { it.id == habitId }?.let { habitToRemove ->
+                habitRepository.deleteHabit(habitToRemove)
+            }
         }
     }
 }

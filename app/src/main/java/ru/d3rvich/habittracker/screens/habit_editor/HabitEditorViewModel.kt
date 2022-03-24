@@ -15,6 +15,7 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
         return HabitEditorViewState.Loading
     }
 
+    private val habitRepository: HabitRepository by lazy { HabitRepository.get() }
     private var habitId: String? = null
 
     init {
@@ -37,7 +38,7 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
 
     private fun loadData(habitId: String) {
         viewModelScope.launch {
-            val habit = HabitRepository.get().getHabitBy(habitId)
+            val habit = habitRepository.getHabitBy(habitId)
             setState(HabitEditorViewState.Editor(habit))
         }
     }
@@ -51,7 +52,7 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
             is HabitEditorEvent.OnSaveHabitPressed -> {
                 viewModelScope.launch {
                     setState(viewState.copy(isUploading = true))
-                    HabitRepository.get().addHabit(event.habit)
+                    habitRepository.addHabit(event.habit)
                     sendAction { HabitEditorAction.PopBackStack }
                 }
             }
@@ -64,7 +65,7 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
             is HabitEditorEvent.OnSaveHabitPressed -> {
                 viewModelScope.launch {
                     setState(viewState.copy(habit = event.habit, isUploading = true))
-                    HabitRepository.get().editHabit(event.habit)
+                    habitRepository.editHabit(event.habit)
                     sendAction { HabitEditorAction.PopBackStack }
                 }
             }
