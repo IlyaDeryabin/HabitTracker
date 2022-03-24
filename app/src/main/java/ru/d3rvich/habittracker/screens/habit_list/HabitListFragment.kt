@@ -94,9 +94,9 @@ class HabitListFragment : Fragment() {
                     viewModel.uiState.collect { state ->
                         binding.progressIndicator.isVisible(state.isLoading)
                         val items = listOf(
-                            PagerItem(habits = state.habitList.filter { it.type == HabitType.Good },
+                            PagerItem(habits = state.habitList?.filter { it.type == HabitType.Good },
                                 targetType = HabitType.Good),
-                            PagerItem(habits = state.habitList.filter { it.type == HabitType.Bad },
+                            PagerItem(habits = state.habitList?.filter { it.type == HabitType.Bad },
                                 targetType = HabitType.Bad)
                         )
                         pagerAdapter.submitList(items)
