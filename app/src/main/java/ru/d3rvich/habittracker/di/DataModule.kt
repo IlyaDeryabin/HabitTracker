@@ -1,12 +1,11 @@
 package ru.d3rvich.habittracker.di
 
-import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.d3rvich.habittracker.data.HabitLocalRepositoryImpl
+import ru.d3rvich.habittracker.data.local.HabitDatabase
 import ru.d3rvich.habittracker.domain.repositories.HabitLocalRepository
 
 @Module
@@ -14,7 +13,7 @@ import ru.d3rvich.habittracker.domain.repositories.HabitLocalRepository
 object DataModule {
 
     @Provides
-    fun provideHabitLocalRepository(@ApplicationContext context: Context): HabitLocalRepository {
-        return HabitLocalRepositoryImpl(context)
+    fun provideHabitLocalRepository(habitDatabase: HabitDatabase): HabitLocalRepository {
+        return HabitLocalRepositoryImpl(habitDatabase = habitDatabase)
     }
 }

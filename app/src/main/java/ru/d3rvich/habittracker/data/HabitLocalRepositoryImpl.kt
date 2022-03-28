@@ -1,7 +1,5 @@
 package ru.d3rvich.habittracker.data
 
-import android.content.Context
-import androidx.room.Room
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.d3rvich.habittracker.data.local.HabitDao
@@ -11,13 +9,7 @@ import ru.d3rvich.habittracker.data.mappers.toHabitEntity
 import ru.d3rvich.habittracker.domain.entity.HabitEntity
 import ru.d3rvich.habittracker.domain.repositories.HabitLocalRepository
 
-private const val DATABASE_NAME = "habit-database"
-
-class HabitLocalRepositoryImpl constructor(context: Context) : HabitLocalRepository {
-
-    private val habitDatabase =
-        Room.databaseBuilder(context.applicationContext, HabitDatabase::class.java, DATABASE_NAME)
-            .build()
+class HabitLocalRepositoryImpl constructor(habitDatabase: HabitDatabase) : HabitLocalRepository {
 
     private val habitDao: HabitDao = habitDatabase.habitDao()
 

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.stateIn
 import ru.d3rvich.habittracker.base.BaseViewModel
 import ru.d3rvich.habittracker.domain.entity.HabitEntity
-import ru.d3rvich.habittracker.domain.repositories.HabitLocalRepository
+import ru.d3rvich.habittracker.domain.interactors.HabitInteractor
 import ru.d3rvich.habittracker.screens.habit_list.model.FilterConfig
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListAction
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListEvent
@@ -16,7 +16,7 @@ import ru.d3rvich.habittracker.screens.habit_list.model.HabitListViewState
 import javax.inject.Inject
 
 @HiltViewModel
-class HabitListViewModel @Inject constructor(private val habitRepository: HabitLocalRepository) :
+class HabitListViewModel @Inject constructor(private val habitInteractor: HabitInteractor) :
     BaseViewModel<HabitListEvent, HabitListViewState, HabitListAction>() {
     override fun createInitialState(): HabitListViewState = HabitListViewState(
         habitList = null,
@@ -24,7 +24,7 @@ class HabitListViewModel @Inject constructor(private val habitRepository: HabitL
         filterConfig = FilterConfig.Empty
     )
 
-    private val habitsFlow = habitRepository.getHabits()
+    private val habitsFlow = habitInteractor.getHabits()
         .stateIn(CoroutineScope(context = SupervisorJob() + Dispatchers.IO),
             started = SharingStarted.WhileSubscribed(),
             initialValue = null)
@@ -80,7 +80,7 @@ class HabitListViewModel @Inject constructor(private val habitRepository: HabitL
     private fun removeHabit(habitId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             habitsFlow.value?.find { it.id == habitId }?.let { habitToRemove ->
-                habitRepository.deleteHabit(habitToRemove)
+                habitInteractor.deleteHabit(habitToRemove)
             }
         }
     }

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.d3rvich.habittracker.base.BaseViewModel
-import ru.d3rvich.habittracker.domain.repositories.HabitLocalRepository
+import ru.d3rvich.habittracker.domain.interactors.HabitInteractor
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorAction
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorEvent
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorViewState
@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HabitEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val habitRepository: HabitLocalRepository,
+    private val habitInteractor: HabitInteractor,
 ) : BaseViewModel<HabitEditorEvent, HabitEditorViewState, HabitEditorAction>() {
     override fun createInitialState(): HabitEditorViewState {
         return HabitEditorViewState.Loading
@@ -42,7 +42,7 @@ class HabitEditorViewModel @Inject constructor(
 
     private fun loadData(habitId: String) {
         viewModelScope.launch {
-            val habit = habitRepository.getHabitBy(habitId)
+            val habit = habitInteractor.getHabitBy(habitId)
             setState(HabitEditorViewState.Editor(habit))
         }
     }
@@ -56,7 +56,7 @@ class HabitEditorViewModel @Inject constructor(
             is HabitEditorEvent.OnSaveHabitPressed -> {
                 viewModelScope.launch {
                     setState(viewState.copy(isUploading = true))
-                    habitRepository.addHabit(event.habit)
+                    habitInteractor.addHabit(event.habit)
                     sendAction { HabitEditorAction.PopBackStack }
                 }
             }
@@ -69,7 +69,7 @@ class HabitEditorViewModel @Inject constructor(
             is HabitEditorEvent.OnSaveHabitPressed -> {
                 viewModelScope.launch {
                     setState(viewState.copy(habit = event.habit, isUploading = true))
-                    habitRepository.editHabit(event.habit)
+                    habitInteractor.editHabit(event.habit)
                     sendAction { HabitEditorAction.PopBackStack }
                 }
             }
