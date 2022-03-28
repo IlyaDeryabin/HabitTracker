@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.d3rvich.habittracker.R
 import ru.d3rvich.habittracker.databinding.PagerItemBinding
-import ru.d3rvich.habittracker.entity.HabitEntity
-import ru.d3rvich.habittracker.entity.HabitType
+import ru.d3rvich.habittracker.domain.entity.HabitEntity
+import ru.d3rvich.habittracker.domain.entity.HabitType
 import ru.d3rvich.habittracker.utils.isVisible
 
 data class PagerItem(val targetType: HabitType, val habits: List<HabitEntity>?)

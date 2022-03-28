@@ -1,26 +1,29 @@
 package ru.d3rvich.habittracker.screens.habit_list
 
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.stateIn
 import ru.d3rvich.habittracker.base.BaseViewModel
-import ru.d3rvich.habittracker.data.HabitRepository
-import ru.d3rvich.habittracker.entity.HabitEntity
+import ru.d3rvich.habittracker.domain.entity.HabitEntity
+import ru.d3rvich.habittracker.domain.repositories.HabitLocalRepository
 import ru.d3rvich.habittracker.screens.habit_list.model.FilterConfig
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListAction
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListEvent
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListViewState
+import javax.inject.Inject
 
-class HabitListViewModel : BaseViewModel<HabitListEvent, HabitListViewState, HabitListAction>() {
+@HiltViewModel
+class HabitListViewModel @Inject constructor(private val habitRepository: HabitLocalRepository) :
+    BaseViewModel<HabitListEvent, HabitListViewState, HabitListAction>() {
     override fun createInitialState(): HabitListViewState = HabitListViewState(
         habitList = null,
         isLoading = true,
         filterConfig = FilterConfig.Empty
     )
 
-    private val habitRepository = HabitRepository.get()
     private val habitsFlow = habitRepository.getHabits()
         .stateIn(CoroutineScope(context = SupervisorJob() + Dispatchers.IO),
             started = SharingStarted.WhileSubscribed(),

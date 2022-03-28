@@ -1,4 +1,4 @@
-package ru.d3rvich.habittracker.entity
+package ru.d3rvich.habittracker.domain.entity
 
 data class HabitEntity(
     val id: String,

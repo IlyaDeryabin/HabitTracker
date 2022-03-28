@@ -16,19 +16,21 @@ import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.d3rvich.habittracker.R
 import ru.d3rvich.habittracker.adapters.HabitListPagerAdapter
 import ru.d3rvich.habittracker.adapters.PagerItem
 import ru.d3rvich.habittracker.databinding.FragmentHabitListBinding
-import ru.d3rvich.habittracker.entity.HabitType
+import ru.d3rvich.habittracker.domain.entity.HabitType
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListAction
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListEvent
 import ru.d3rvich.habittracker.screens.habit_list.view.FilterFragment
 import ru.d3rvich.habittracker.screens.habit_list.view.RemoveHabitDialog
 import ru.d3rvich.habittracker.utils.isVisible
 
+@AndroidEntryPoint
 class HabitListFragment : Fragment() {
     private val viewModel: HabitListViewModel by viewModels()
     private val binding: FragmentHabitListBinding by viewBinding(createMethod = CreateMethod.INFLATE)

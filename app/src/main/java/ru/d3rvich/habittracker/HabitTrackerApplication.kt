@@ -1,11 +1,7 @@
 package ru.d3rvich.habittracker
 
 import android.app.Application
-import ru.d3rvich.habittracker.data.HabitRepository
+import dagger.hilt.android.HiltAndroidApp
 
-class HabitTrackerApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
-        HabitRepository.initialize(this)
-    }
-}
+@HiltAndroidApp
+class HabitTrackerApplication : Application()

@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.d3rvich.habittracker.R
 import ru.d3rvich.habittracker.databinding.HabitListItemBinding
-import ru.d3rvich.habittracker.entity.HabitEntity
-import ru.d3rvich.habittracker.entity.HabitType
+import ru.d3rvich.habittracker.domain.entity.HabitEntity
+import ru.d3rvich.habittracker.domain.entity.HabitType
 
 class HabitListAdapter(
     private val onItemClick: (String) -> Unit,

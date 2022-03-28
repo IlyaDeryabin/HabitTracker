@@ -1,7 +1,7 @@
 package ru.d3rvich.habittracker.data.dto
 
 import androidx.room.*
-import ru.d3rvich.habittracker.entity.HabitType
+import ru.d3rvich.habittracker.domain.entity.HabitType
 
 @Entity
 @TypeConverters(HabitConverters::class)

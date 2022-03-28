@@ -2,20 +2,24 @@ package ru.d3rvich.habittracker.screens.habit_editor
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.d3rvich.habittracker.base.BaseViewModel
-import ru.d3rvich.habittracker.data.HabitRepository
+import ru.d3rvich.habittracker.domain.repositories.HabitLocalRepository
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorAction
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorEvent
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorViewState
+import javax.inject.Inject
 
-class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
-    BaseViewModel<HabitEditorEvent, HabitEditorViewState, HabitEditorAction>() {
+@HiltViewModel
+class HabitEditorViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val habitRepository: HabitLocalRepository,
+) : BaseViewModel<HabitEditorEvent, HabitEditorViewState, HabitEditorAction>() {
     override fun createInitialState(): HabitEditorViewState {
         return HabitEditorViewState.Loading
     }
 
-    private val habitRepository: HabitRepository by lazy { HabitRepository.get() }
     private var habitId: String? = null
 
     init {

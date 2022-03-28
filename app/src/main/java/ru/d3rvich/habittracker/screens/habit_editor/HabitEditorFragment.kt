@@ -17,12 +17,13 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textfield.TextInputEditText
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.d3rvich.habittracker.R
 import ru.d3rvich.habittracker.databinding.FragmentHabitEditorBinding
-import ru.d3rvich.habittracker.entity.HabitEntity
-import ru.d3rvich.habittracker.entity.HabitType
+import ru.d3rvich.habittracker.domain.entity.HabitEntity
+import ru.d3rvich.habittracker.domain.entity.HabitType
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorAction
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorEvent
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorViewState
@@ -30,6 +31,7 @@ import ru.d3rvich.habittracker.utils.HSVGradient
 import ru.d3rvich.habittracker.utils.isVisible
 import java.util.*
 
+@AndroidEntryPoint
 class HabitEditorFragment : Fragment() {
     private val viewModel: HabitEditorViewModel by viewModels()
     private val binding: FragmentHabitEditorBinding by viewBinding(createMethod = CreateMethod.INFLATE)
