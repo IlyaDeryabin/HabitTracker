@@ -33,10 +33,12 @@ class FilterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.filterInputText.editText?.setText(viewModel.currentState.filterConfig.filterText)
-        binding.filterInputText.editText?.doAfterTextChanged { text: Editable? ->
-            text?.let {
-                viewModel.obtainEvent(HabitListEvent.OnFilterChange(text.toString()))
+        binding.filterInputText.editText?.run {
+            setText(viewModel.currentState.filterConfig.filterText)
+            doAfterTextChanged { text: Editable? ->
+                text?.let {
+                    viewModel.obtainEvent(HabitListEvent.OnFilterChange(text.toString()))
+                }
             }
         }
         configureSortingSelector(viewModel.currentState.filterConfig.sortingEngine as HabitSortingVariants)
@@ -50,17 +52,15 @@ class FilterFragment : Fragment() {
             R.string.by_creation_time to HabitSortingVariants.ByCreatedTime).map { getString(it.first) to it.second }
         val adapter =
             ArrayAdapter(requireContext(), R.layout.list_item, sortingList.map { it.first })
-        with(binding.sortingSelector.editText as? AutoCompleteTextView) {
-            this?.let {
-                val selectedItemText = sortingList.find { it.second == initialSortingMethod }
-                selectedItemText?.let {
-                    setText(selectedItemText.first)
-                }
-                setAdapter(adapter)
-                setOnItemClickListener { _, _, index, _ ->
-                    val selectedItem = sortingList[index]
-                    viewModel.obtainEvent(HabitListEvent.OnSortingMethodChange(selectedItem.second))
-                }
+        (binding.sortingSelector.editText as? AutoCompleteTextView)?.run {
+            val selectedItemText = sortingList.find { it.second == initialSortingMethod }
+            selectedItemText?.let {
+                setText(selectedItemText.first)
+            }
+            setAdapter(adapter)
+            setOnItemClickListener { _, _, index, _ ->
+                val selectedItem = sortingList[index]
+                viewModel.obtainEvent(HabitListEvent.OnSortingMethodChange(selectedItem.second))
             }
         }
     }

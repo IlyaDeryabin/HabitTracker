@@ -24,11 +24,9 @@ class HabitEditorViewModel @Inject constructor(
 
     init {
         habitId = savedStateHandle.get(HABIT_ID_KEY)
-        if (habitId == null) {
-            setState(HabitEditorViewState.Creator())
-        } else {
-            loadData(habitId!!)
-        }
+        habitId?.let {
+            loadData(it)
+        } ?: setState(HabitEditorViewState.Creator())
     }
 
     override fun obtainEvent(event: HabitEditorEvent) {
