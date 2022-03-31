@@ -3,7 +3,7 @@ package ru.d3rvich.habittracker.domain.repositories
 import kotlinx.coroutines.flow.Flow
 import ru.d3rvich.habittracker.domain.entity.HabitEntity
 
-interface HabitLocalRepository {
+interface HabitRepository {
 
     fun getHabits(): Flow<List<HabitEntity>>
 

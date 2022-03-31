@@ -1,4 +1,4 @@
-package ru.d3rvich.habittracker.data
+package ru.d3rvich.habittracker.data.repositories
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -6,10 +6,11 @@ import ru.d3rvich.habittracker.data.local.HabitDao
 import ru.d3rvich.habittracker.data.local.HabitDatabase
 import ru.d3rvich.habittracker.data.mappers.toHabitDto
 import ru.d3rvich.habittracker.data.mappers.toHabitEntity
+import ru.d3rvich.habittracker.data.remote.HabitApiService
 import ru.d3rvich.habittracker.domain.entity.HabitEntity
-import ru.d3rvich.habittracker.domain.repositories.HabitLocalRepository
+import ru.d3rvich.habittracker.domain.repositories.HabitRepository
 
-class HabitLocalRepositoryImpl constructor(habitDatabase: HabitDatabase) : HabitLocalRepository {
+class HabitRepositoryImpl constructor(habitDatabase: HabitDatabase, private val habitApiService: HabitApiService) : HabitRepository {
 
     private val habitDao: HabitDao = habitDatabase.habitDao()
 

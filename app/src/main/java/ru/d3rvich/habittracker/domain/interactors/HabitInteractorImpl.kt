@@ -2,22 +2,22 @@ package ru.d3rvich.habittracker.domain.interactors
 
 import kotlinx.coroutines.flow.Flow
 import ru.d3rvich.habittracker.domain.entity.HabitEntity
-import ru.d3rvich.habittracker.domain.repositories.HabitLocalRepository
+import ru.d3rvich.habittracker.domain.repositories.HabitRepository
 
-class HabitInteractorImpl(private val localRepository: HabitLocalRepository) : HabitInteractor {
-    override fun getHabits(): Flow<List<HabitEntity>> = localRepository.getHabits()
+class HabitInteractorImpl(private val repository: HabitRepository) : HabitInteractor {
+    override fun getHabits(): Flow<List<HabitEntity>> = repository.getHabits()
 
-    override suspend fun getHabitBy(id: String): HabitEntity = localRepository.getHabitBy(id = id)
+    override suspend fun getHabitBy(id: String): HabitEntity = repository.getHabitBy(id = id)
 
     override suspend fun addHabit(habit: HabitEntity) {
-        localRepository.addHabit(habit = habit)
+        repository.addHabit(habit = habit)
     }
 
     override suspend fun editHabit(habit: HabitEntity) {
-        localRepository.editHabit(habit = habit)
+        repository.editHabit(habit = habit)
     }
 
     override suspend fun deleteHabit(habit: HabitEntity) {
-        localRepository.deleteHabit(habit = habit)
+        repository.deleteHabit(habit = habit)
     }
 }

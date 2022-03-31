@@ -3,9 +3,9 @@ package ru.d3rvich.habittracker.data.dto
 import androidx.room.*
 import ru.d3rvich.habittracker.domain.entity.HabitType
 
-@Entity
+@Entity(tableName = "habit")
 @TypeConverters(HabitConverters::class)
-data class HabitDto(
+data class HabitLocalDto(
     @PrimaryKey val id: String,
     val title: String,
     val description: String,

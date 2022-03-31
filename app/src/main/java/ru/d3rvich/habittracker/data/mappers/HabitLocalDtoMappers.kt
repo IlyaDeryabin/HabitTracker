@@ -1,9 +1,9 @@
 package ru.d3rvich.habittracker.data.mappers
 
-import ru.d3rvich.habittracker.data.dto.HabitDto
+import ru.d3rvich.habittracker.data.dto.HabitLocalDto
 import ru.d3rvich.habittracker.domain.entity.HabitEntity
 
-fun HabitEntity.toHabitDto(): HabitDto = HabitDto(id = id,
+fun HabitEntity.toHabitDto(): HabitLocalDto = HabitLocalDto(id = id,
     title = title,
     description = description,
     type = type,
@@ -14,7 +14,7 @@ fun HabitEntity.toHabitDto(): HabitDto = HabitDto(id = id,
     date = date,
     doneDates = doneDates)
 
-fun HabitDto.toHabitEntity(): HabitEntity = HabitEntity(id = id,
+fun HabitLocalDto.toHabitEntity(): HabitEntity = HabitEntity(id = id,
     title = title,
     description = description,
     type = type,
