@@ -1,5 +1,6 @@
 package ru.d3rvich.habittracker.screens.habit_list
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +17,9 @@ import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import ru.d3rvich.habittracker.MainActivity
 import ru.d3rvich.habittracker.R
 import ru.d3rvich.habittracker.adapters.HabitListPagerAdapter
 import ru.d3rvich.habittracker.adapters.PagerItem
@@ -29,10 +30,16 @@ import ru.d3rvich.habittracker.screens.habit_list.model.HabitListEvent
 import ru.d3rvich.habittracker.screens.habit_list.view.FilterFragment
 import ru.d3rvich.habittracker.screens.habit_list.view.RemoveHabitDialog
 import ru.d3rvich.habittracker.utils.isVisible
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class HabitListFragment : Fragment() {
-    private val viewModel: HabitListViewModel by viewModels()
+
+    @Inject
+    lateinit var viewModelFactory: HabitListViewModelFactory.Factory
+
+    private val viewModel: HabitListViewModel by viewModels {
+       viewModelFactory.create(this)
+    }
     private val binding: FragmentHabitListBinding by viewBinding(createMethod = CreateMethod.INFLATE)
     private val pagerAdapter: HabitListPagerAdapter by lazy {
         HabitListPagerAdapter(onItemClick = { habitId ->
@@ -42,6 +49,11 @@ class HabitListFragment : Fragment() {
                 viewModel.obtainEvent(HabitListEvent.OnDeleteHabit(it))
             }.show(childFragmentManager, RemoveHabitDialog.TAG)
         })
+    }
+
+    override fun onAttach(context: Context) {
+        (activity as MainActivity).featureComponent.inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreateView(

@@ -1,5 +1,6 @@
 package ru.d3rvich.habittracker.screens.habit_editor
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,9 +18,9 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textfield.TextInputEditText
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import ru.d3rvich.habittracker.MainActivity
 import ru.d3rvich.habittracker.R
 import ru.d3rvich.habittracker.databinding.FragmentHabitEditorBinding
 import ru.d3rvich.habittracker.domain.entity.HabitEntity
@@ -30,10 +31,16 @@ import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorViewState
 import ru.d3rvich.habittracker.utils.HSVGradient
 import ru.d3rvich.habittracker.utils.isVisible
 import java.util.*
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class HabitEditorFragment : Fragment() {
-    private val viewModel: HabitEditorViewModel by viewModels()
+
+    @Inject
+    lateinit var viewModelFactory: HabitEditorViewModelFactory.Factory
+
+    private val viewModel: HabitEditorViewModel by viewModels {
+        viewModelFactory.create(this, arguments)
+    }
     private val binding: FragmentHabitEditorBinding by viewBinding(createMethod = CreateMethod.INFLATE)
 
     private val gradient = HSVGradient()
@@ -41,6 +48,11 @@ class HabitEditorFragment : Fragment() {
     private var habitId: String? = null
     private var creationTime: Long? = null
     private var doneDates: List<Long>? = null
+
+    override fun onAttach(context: Context) {
+        (activity as MainActivity).featureComponent.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

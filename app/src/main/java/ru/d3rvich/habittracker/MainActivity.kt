@@ -7,11 +7,15 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import dagger.hilt.android.AndroidEntryPoint
 import ru.d3rvich.habittracker.databinding.ActivityMainBinding
+import ru.d3rvich.habittracker.di.FeatureComponent
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    val featureComponent: FeatureComponent by lazy {
+        applicationContext.appComponent.featureComponent().build()
+    }
+
     private val binding: ActivityMainBinding by viewBinding()
 
     override fun onCreate(savedInstanceState: Bundle?) {

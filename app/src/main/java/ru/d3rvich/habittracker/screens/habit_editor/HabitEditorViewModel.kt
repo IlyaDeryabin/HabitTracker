@@ -1,20 +1,23 @@
 package ru.d3rvich.habittracker.screens.habit_editor
 
+import android.os.Bundle
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.savedstate.SavedStateRegistryOwner
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 import ru.d3rvich.habittracker.base.BaseViewModel
 import ru.d3rvich.habittracker.domain.interactors.HabitInteractor
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorAction
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorEvent
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorViewState
-import javax.inject.Inject
 
-@HiltViewModel
-class HabitEditorViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-    private val habitInteractor: HabitInteractor,
+class HabitEditorViewModel(
+    savedStateHandle: SavedStateHandle, private val habitInteractor: HabitInteractor,
 ) : BaseViewModel<HabitEditorEvent, HabitEditorViewState, HabitEditorAction>() {
     override fun createInitialState(): HabitEditorViewState {
         return HabitEditorViewState.Loading
@@ -87,5 +90,29 @@ class HabitEditorViewModel @Inject constructor(
 
     companion object {
         const val HABIT_ID_KEY = "habitId"
+    }
+}
+
+class HabitEditorViewModelFactory @AssistedInject constructor(
+    private val habitInteractor: HabitInteractor,
+    @Assisted("owner") owner: SavedStateRegistryOwner,
+    @Assisted("args") args: Bundle? = null,
+) : AbstractSavedStateViewModelFactory(owner, args) {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            @Assisted("owner") owner: SavedStateRegistryOwner,
+            @Assisted("args") args: Bundle? = null,
+        ): HabitEditorViewModelFactory
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel?> create(
+        key: String,
+        modelClass: Class<T>,
+        handle: SavedStateHandle,
+    ): T {
+        return HabitEditorViewModel(handle, habitInteractor) as T
     }
 }
