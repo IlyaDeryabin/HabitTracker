@@ -10,14 +10,12 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.d3rvich.habittracker.MainActivity
 import ru.d3rvich.habittracker.R
 import ru.d3rvich.habittracker.databinding.FragmentFilterBinding
 import ru.d3rvich.habittracker.screens.habit_list.HabitListViewModel
-import ru.d3rvich.habittracker.screens.habit_list.HabitListViewModelFactory
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListEvent
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitSortingVariants
 import ru.d3rvich.habittracker.screens.habit_list.model.SortDirection
@@ -26,12 +24,9 @@ import javax.inject.Inject
 class FilterFragment : Fragment() {
 
     @Inject
-    lateinit var viewModelFactory: HabitListViewModelFactory.Factory
+    lateinit var viewModel: HabitListViewModel
 
     private val binding: FragmentFilterBinding by viewBinding(createMethod = CreateMethod.INFLATE)
-    private val viewModel: HabitListViewModel by viewModels(ownerProducer = { requireParentFragment() }) {
-        viewModelFactory.create(this)
-    }
 
     override fun onAttach(context: Context) {
         (activity as MainActivity).featureComponent.inject(this)

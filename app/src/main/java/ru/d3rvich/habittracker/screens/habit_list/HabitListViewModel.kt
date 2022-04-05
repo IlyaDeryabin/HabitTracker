@@ -1,16 +1,14 @@
 package ru.d3rvich.habittracker.screens.habit_list
 
-import android.os.Bundle
-import androidx.lifecycle.*
-import androidx.savedstate.SavedStateRegistryOwner
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import kotlinx.coroutines.*
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.d3rvich.habittracker.base.BaseViewModel
+import ru.d3rvich.habittracker.di.ActivityScope
 import ru.d3rvich.habittracker.domain.entity.HabitEntity
 import ru.d3rvich.habittracker.domain.interactors.HabitInteractor
 import ru.d3rvich.habittracker.screens.habit_list.model.FilterConfig
@@ -19,6 +17,7 @@ import ru.d3rvich.habittracker.screens.habit_list.model.HabitListEvent
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListViewState
 import javax.inject.Inject
 
+@ActivityScope
 class HabitListViewModel @Inject constructor(private val habitInteractor: HabitInteractor) :
     BaseViewModel<HabitListEvent, HabitListViewState, HabitListAction>() {
 
@@ -87,29 +86,5 @@ class HabitListViewModel @Inject constructor(private val habitInteractor: HabitI
                 habitInteractor.deleteHabit(habitToRemove)
             }
         }
-    }
-}
-
-class HabitListViewModelFactory @AssistedInject constructor(
-    private val habitInteractor: HabitInteractor,
-    @Assisted("owner") owner: SavedStateRegistryOwner,
-    @Assisted("args") args: Bundle? = null,
-) : AbstractSavedStateViewModelFactory(owner, args) {
-
-    @AssistedFactory
-    interface Factory {
-        fun create(
-            @Assisted("owner") owner: SavedStateRegistryOwner,
-            @Assisted("args") args: Bundle? = null,
-        ): HabitListViewModelFactory
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(
-        key: String,
-        modelClass: Class<T>,
-        handle: SavedStateHandle,
-    ): T {
-        return HabitListViewModel(habitInteractor) as T
     }
 }

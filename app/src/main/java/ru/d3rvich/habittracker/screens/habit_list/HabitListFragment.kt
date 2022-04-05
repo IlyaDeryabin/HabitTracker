@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -17,7 +16,6 @@ import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.d3rvich.habittracker.MainActivity
 import ru.d3rvich.habittracker.R
@@ -35,11 +33,8 @@ import javax.inject.Inject
 class HabitListFragment : Fragment() {
 
     @Inject
-    lateinit var viewModelFactory: HabitListViewModelFactory.Factory
+    lateinit var viewModel: HabitListViewModel
 
-    private val viewModel: HabitListViewModel by viewModels {
-       viewModelFactory.create(this)
-    }
     private val binding: FragmentHabitListBinding by viewBinding(createMethod = CreateMethod.INFLATE)
     private val pagerAdapter: HabitListPagerAdapter by lazy {
         HabitListPagerAdapter(onItemClick = { habitId ->

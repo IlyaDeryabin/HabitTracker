@@ -82,12 +82,12 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
 
     /* Coroutines */
-    def coroutines_version = "1.5.2"
+    def coroutines_version = '1.6.1'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     /* View Binding Additional */
-    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.3'
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.6'
 
     /* Tests */
     testImplementation 'junit:junit:4.13.2'

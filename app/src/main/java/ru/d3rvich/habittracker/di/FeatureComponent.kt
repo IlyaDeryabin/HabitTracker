@@ -4,8 +4,10 @@ import dagger.Subcomponent
 import ru.d3rvich.habittracker.screens.habit_editor.HabitEditorFragment
 import ru.d3rvich.habittracker.screens.habit_list.HabitListFragment
 import ru.d3rvich.habittracker.screens.habit_list.view.FilterFragment
+import javax.inject.Scope
 
 @Subcomponent
+@ActivityScope
 interface FeatureComponent {
 
     @Subcomponent.Builder
@@ -17,3 +19,7 @@ interface FeatureComponent {
     fun inject(fragment: FilterFragment)
     fun inject(fragment: HabitEditorFragment)
 }
+
+@Retention(AnnotationRetention.RUNTIME)
+@Scope
+annotation class ActivityScope
