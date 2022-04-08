@@ -9,11 +9,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.d3rvich.habittracker.BuildConfig
 import ru.d3rvich.habittracker.data.remote.AuthorizationInterceptor
 import ru.d3rvich.habittracker.data.remote.HabitApiService
+import ru.d3rvich.habittracker.data.remote.result_adapter.ResultAdapterFactory
 import javax.inject.Singleton
 
 @Module
 object NetworkModule {
-    private const val BASE_URL = "https://doublet.app/droid/8/api/"
+    private const val BASE_URL = "https://droid-test-server.doubletapp.ru/api/"
 
     @Provides
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
@@ -42,6 +43,7 @@ object NetworkModule {
         return Retrofit.Builder().apply {
             baseUrl(BASE_URL)
             client(onHttpClient)
+            addCallAdapterFactory(ResultAdapterFactory())
             addConverterFactory(GsonConverterFactory.create())
         }.build()
     }
