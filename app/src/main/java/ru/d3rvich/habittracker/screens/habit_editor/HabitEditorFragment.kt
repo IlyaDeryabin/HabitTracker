@@ -10,11 +10,11 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textfield.TextInputEditText
@@ -35,11 +35,13 @@ import javax.inject.Inject
 class HabitEditorFragment : Fragment() {
 
     @Inject
-    lateinit var viewModelFactory: HabitEditorViewModelFactory.Factory
+    lateinit var viewModelFactory: HabitEditorViewModel.Factory
 
-    private val viewModel: HabitEditorViewModel by viewModels {
-        viewModelFactory.create(this, arguments)
+    private val viewModel: HabitEditorViewModel by lazy {
+        val args: HabitEditorFragmentArgs by navArgs()
+        viewModelFactory.create(args.habitId)
     }
+
     private val binding: FragmentHabitEditorBinding by viewBinding(createMethod = CreateMethod.INFLATE)
 
     private val gradient = HSVGradient()

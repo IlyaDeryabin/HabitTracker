@@ -1,11 +1,6 @@
 package ru.d3rvich.habittracker.screens.habit_editor
 
-import android.os.Bundle
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.savedstate.SavedStateRegistryOwner
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -16,17 +11,15 @@ import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorAction
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorEvent
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorViewState
 
-class HabitEditorViewModel(
-    savedStateHandle: SavedStateHandle, private val habitInteractor: HabitInteractor,
+class HabitEditorViewModel @AssistedInject constructor(
+    @Assisted("habitId") private val habitId: String? = null,
+    private val habitInteractor: HabitInteractor,
 ) : BaseViewModel<HabitEditorEvent, HabitEditorViewState, HabitEditorAction>() {
     override fun createInitialState(): HabitEditorViewState {
         return HabitEditorViewState.Loading
     }
 
-    private var habitId: String? = null
-
     init {
-        habitId = savedStateHandle.get(HABIT_ID_KEY)
         habitId?.let {
             loadData(it)
         } ?: setState(HabitEditorViewState.Creator())
@@ -82,37 +75,14 @@ class HabitEditorViewModel(
         when (event) {
             HabitEditorEvent.OnReloadButtonPressed -> {
                 requireNotNull(habitId)
-                loadData(habitId!!)
+                loadData(habitId)
             }
             else -> unexpectedEventError(event, viewState)
         }
     }
 
-    companion object {
-        const val HABIT_ID_KEY = "habitId"
-    }
-}
-
-class HabitEditorViewModelFactory @AssistedInject constructor(
-    private val habitInteractor: HabitInteractor,
-    @Assisted("owner") owner: SavedStateRegistryOwner,
-    @Assisted("args") args: Bundle? = null,
-) : AbstractSavedStateViewModelFactory(owner, args) {
-
     @AssistedFactory
     interface Factory {
-        fun create(
-            @Assisted("owner") owner: SavedStateRegistryOwner,
-            @Assisted("args") args: Bundle? = null,
-        ): HabitEditorViewModelFactory
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(
-        key: String,
-        modelClass: Class<T>,
-        handle: SavedStateHandle,
-    ): T {
-        return HabitEditorViewModel(handle, habitInteractor) as T
+        fun create(@Assisted("habitId") habitId: String? = null): HabitEditorViewModel
     }
 }
