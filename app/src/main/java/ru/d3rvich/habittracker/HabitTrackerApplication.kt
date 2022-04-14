@@ -12,7 +12,7 @@ class HabitTrackerApplication : Application() {
     }
 }
 
-internal val Context.appComponent: AppComponent
+val Context.appComponent: AppComponent
     get() = when (this) {
         is HabitTrackerApplication -> appComponent
         else -> applicationContext.appComponent

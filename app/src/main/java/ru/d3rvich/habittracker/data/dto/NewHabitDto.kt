@@ -1,13 +1,11 @@
 package ru.d3rvich.habittracker.data.dto
 
 import com.google.gson.annotations.SerializedName
-import ru.d3rvich.habittracker.domain.entity.HabitType
 
-data class HabitRemoteDto(
-    @SerializedName("uid") val id: String,
+data class NewHabitDto(
     val title: String,
     val description: String,
-    val type: HabitType,
+    val type: Int,
     val count: Int,
     val frequency: Int,
     val priority: Int,

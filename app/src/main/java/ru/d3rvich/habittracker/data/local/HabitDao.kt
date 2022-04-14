@@ -2,23 +2,26 @@ package ru.d3rvich.habittracker.data.local
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import ru.d3rvich.habittracker.data.dto.HabitLocalDto
+import ru.d3rvich.habittracker.data.dto.HabitDto
 
 @Dao
 interface HabitDao {
 
     @Query("SELECT * FROM habit")
-    fun getHabits(): Flow<List<HabitLocalDto>>
+    fun getHabits(): Flow<List<HabitDto>>
+
+    @Query("SELECT * FROM habit")
+    suspend fun getHabitsSnapshot(): List<HabitDto>
 
     @Query("SELECT * FROM habit WHERE id = :id")
-    suspend fun getHabitBy(id: String): HabitLocalDto
+    suspend fun getHabitBy(id: String): HabitDto
 
     @Insert
-    suspend fun createHabit(habitDto: HabitLocalDto)
+    suspend fun createHabits(vararg habitDto: HabitDto)
 
     @Update
-    suspend fun editHabit(habitDto: HabitLocalDto)
+    suspend fun updateHabits(vararg habitDto: HabitDto)
 
     @Delete
-    suspend fun deleteHabit(habitDto: HabitLocalDto)
+    suspend fun deleteHabits(vararg habitDto: HabitDto)
 }

@@ -1,20 +1,26 @@
 package ru.d3rvich.habittracker.data.remote
 
-import retrofit2.Response
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 import ru.d3rvich.habittracker.data.dto.HabitDoneDto
-import ru.d3rvich.habittracker.data.dto.HabitRemoteDto
+import ru.d3rvich.habittracker.data.dto.HabitDto
+import ru.d3rvich.habittracker.data.dto.HabitUidDto
+import ru.d3rvich.habittracker.data.dto.NewHabitDto
+import ru.d3rvich.habittracker.data.remote.result.RetrofitResult
 
 interface HabitApiService {
 
+    @PUT("habit")
+    suspend fun editHabit(@Body habit: HabitDto): RetrofitResult<HabitUidDto>
+
+    @PUT("habit")
+    suspend fun createHabit(@Body habit: NewHabitDto): RetrofitResult<HabitUidDto>
+
     @GET("habit")
-    suspend fun getHabits(): List<HabitRemoteDto>
+    suspend fun getHabits(): RetrofitResult<List<HabitDto>>
 
     @POST("habit_done")
-    suspend fun habitDone(habitDone: HabitDoneDto): Response<Unit>
+    suspend fun habitDone(@Body habitDone: HabitDoneDto): RetrofitResult<Unit>
 
-    @DELETE("habit")
-    suspend fun removeHabit(habitId: String): Response<Unit>
+    @HTTP(path = "habit", method = "DELETE", hasBody = true)
+    suspend fun removeHabit(@Body habitUid: HabitUidDto): RetrofitResult<Unit>
 }

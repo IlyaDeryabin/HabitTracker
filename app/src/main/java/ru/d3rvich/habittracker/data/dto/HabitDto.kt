@@ -1,34 +1,24 @@
 package ru.d3rvich.habittracker.data.dto
 
 import androidx.room.*
-import ru.d3rvich.habittracker.domain.entity.HabitType
+import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "habit")
 @TypeConverters(HabitConverters::class)
-data class HabitLocalDto(
-    @PrimaryKey val id: String,
+data class HabitDto(
+    @PrimaryKey @SerializedName("uid") val id: String,
     val title: String,
     val description: String,
-    val type: HabitType,
+    val type: Int,
     val count: Int,
     val frequency: Int,
     val priority: Int,
     val color: Int,
     val date: Long,
-    @ColumnInfo(name = "done_dates") val doneDates: List<Long>,
+    @ColumnInfo(name = "done_dates") @SerializedName("done_dates") val doneDates: List<Long>,
 )
 
 class HabitConverters {
-    @TypeConverter
-    fun fromHabitType(habitType: HabitType): Int {
-        return habitType.code
-    }
-
-    @TypeConverter
-    fun toHabitType(code: Int): HabitType {
-        return HabitType.values().find { it.code == code }!!
-    }
-
     private val separator = ","
 
     @TypeConverter

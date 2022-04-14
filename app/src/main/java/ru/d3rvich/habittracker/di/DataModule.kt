@@ -1,5 +1,6 @@
 package ru.d3rvich.habittracker.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import ru.d3rvich.habittracker.data.repositories.HabitRepositoryImpl
@@ -12,9 +13,12 @@ object DataModule {
 
     @Provides
     fun provideHabitLocalRepositoryImpl(
+        context: Context,
         habitDatabase: HabitDatabase,
         habitApiService: HabitApiService,
     ): HabitRepository {
-        return HabitRepositoryImpl(habitDatabase = habitDatabase, habitApiService = habitApiService)
+        return HabitRepositoryImpl(habitDatabase = habitDatabase,
+            habitApiService = habitApiService,
+            context = context)
     }
 }
