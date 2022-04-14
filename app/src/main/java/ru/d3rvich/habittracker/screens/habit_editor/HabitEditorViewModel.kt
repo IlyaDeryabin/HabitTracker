@@ -5,8 +5,11 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
+import ru.d3rvich.habittracker.R
 import ru.d3rvich.habittracker.base.BaseViewModel
+import ru.d3rvich.habittracker.domain.entity.NewHabitEntity
 import ru.d3rvich.habittracker.domain.interactors.HabitInteractor
+import ru.d3rvich.habittracker.domain.models.OperationStatus
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorAction
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorEvent
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorViewState
@@ -50,7 +53,21 @@ class HabitEditorViewModel @AssistedInject constructor(
             is HabitEditorEvent.OnSaveHabitPressed -> {
                 viewModelScope.launch {
                     setState(viewState.copy(isUploading = true))
-                    habitInteractor.addHabit(event.habit)
+                    val newHabit = with(event.habit) {
+                        NewHabitEntity(title = title,
+                            description = description,
+                            type = type,
+                            count = count,
+                            frequency = frequency,
+                            priority = priority,
+                            color = color,
+                            date = date,
+                            doneDates = doneDates)
+                    }
+                    val status = habitInteractor.createHabit(newHabit)
+                    if (status is OperationStatus.Failure) {
+                        sendAction { HabitEditorAction.ShowToast(R.string.check_internet_connection) }
+                    }
                     sendAction { HabitEditorAction.PopBackStack }
                 }
             }
@@ -63,7 +80,10 @@ class HabitEditorViewModel @AssistedInject constructor(
             is HabitEditorEvent.OnSaveHabitPressed -> {
                 viewModelScope.launch {
                     setState(viewState.copy(habit = event.habit, isUploading = true))
-                    habitInteractor.editHabit(event.habit)
+                    val status = habitInteractor.editHabit(event.habit)
+                    if (status is OperationStatus.Failure) {
+                        sendAction { HabitEditorAction.ShowToast(R.string.check_internet_connection) }
+                    }
                     sendAction { HabitEditorAction.PopBackStack }
                 }
             }

@@ -7,10 +7,12 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.d3rvich.habittracker.R
 import ru.d3rvich.habittracker.base.BaseViewModel
 import ru.d3rvich.habittracker.di.ActivityScope
 import ru.d3rvich.habittracker.domain.entity.HabitEntity
 import ru.d3rvich.habittracker.domain.interactors.HabitInteractor
+import ru.d3rvich.habittracker.domain.models.OperationStatus
 import ru.d3rvich.habittracker.screens.habit_list.model.FilterConfig
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListAction
 import ru.d3rvich.habittracker.screens.habit_list.model.HabitListEvent
@@ -60,11 +62,18 @@ class HabitListViewModel @Inject constructor(private val habitInteractor: HabitI
     }
 
     private fun loadData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            setState(currentState.copy(isLoading = true))
+        viewModelScope.launch {
             habitsFlow.collect { habits ->
                 updateViewState(currentState.filterConfig, habits)
             }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            setState(currentState.copy(isLoading = true))
+            val status = habitInteractor.updateHabits()
+            if (status is OperationStatus.Failure) {
+                sendAction { HabitListAction.ShowToast(R.string.check_internet_connection) }
+            }
+            setState(currentState.copy(isLoading = false))
         }
     }
 
@@ -73,9 +82,8 @@ class HabitListViewModel @Inject constructor(private val habitInteractor: HabitI
         habits: List<HabitEntity>? = habitsFlow.value,
     ) {
         habits?.let {
-            setState(HabitListViewState(
+            setState(currentState.copy(
                 habitList = filterConfig.execute(habits),
-                isLoading = false,
                 filterConfig = filterConfig))
         }
     }

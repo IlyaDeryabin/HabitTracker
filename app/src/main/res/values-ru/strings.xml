@@ -42,4 +42,6 @@
     <string name="confirm">Подвердить</string>
     <string name="delete_habit">Удалить привычку?</string>
     <string name="remove_message">Это действие отменить невозможно.</string>
+    <string name="header_image">Фотография заголовка</string>
+    <string name="check_internet_connection">Проверьте соединение с интернетом</string>
 </resources>

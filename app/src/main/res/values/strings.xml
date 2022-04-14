@@ -44,4 +44,6 @@
     <string name="confirm">Confirm</string>
     <string name="delete_habit">Remove habit?</string>
     <string name="remove_message">This action can\'t be cancel.</string>
+    <string name="header_image">Header image</string>
+    <string name="check_internet_connection">Check internet connection</string>
 </resources>
