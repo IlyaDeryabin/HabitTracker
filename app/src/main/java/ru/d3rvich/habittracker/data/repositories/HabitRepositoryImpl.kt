@@ -94,7 +94,7 @@ class HabitRepositoryImpl constructor(
                 when (result.statusCode) {
                     400, 401, 500 -> {
                     }
-                    in 501..599 -> {
+                    else -> {
                         startWorker()
                     }
                 }
