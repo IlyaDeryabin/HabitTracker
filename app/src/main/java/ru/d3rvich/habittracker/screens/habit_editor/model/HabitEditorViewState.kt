@@ -2,7 +2,7 @@ package ru.d3rvich.habittracker.screens.habit_editor.model
 
 import androidx.annotation.StringRes
 import ru.d3rvich.habittracker.base.UiState
-import ru.d3rvich.habittracker.entity.HabitEntity
+import ru.d3rvich.habittracker.domain.entity.HabitEntity
 
 sealed class HabitEditorViewState : UiState {
     object Loading : HabitEditorViewState()

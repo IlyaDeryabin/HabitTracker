@@ -1,5 +1,6 @@
 package ru.d3rvich.habittracker.screens.habit_editor
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,36 +10,49 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import ru.d3rvich.habittracker.MainActivity
 import ru.d3rvich.habittracker.R
 import ru.d3rvich.habittracker.databinding.FragmentHabitEditorBinding
-import ru.d3rvich.habittracker.entity.HabitEntity
-import ru.d3rvich.habittracker.entity.HabitType
+import ru.d3rvich.habittracker.domain.entity.HabitEntity
+import ru.d3rvich.habittracker.domain.entity.HabitType
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorAction
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorEvent
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorViewState
 import ru.d3rvich.habittracker.utils.HSVGradient
 import ru.d3rvich.habittracker.utils.isVisible
 import java.util.*
+import javax.inject.Inject
 
 class HabitEditorFragment : Fragment() {
-    private val viewModel: HabitEditorViewModel by viewModels()
+
+    @Inject
+    lateinit var viewModelFactory: HabitEditorViewModel.Factory
+
+    private val viewModel: HabitEditorViewModel by lazy {
+        val args: HabitEditorFragmentArgs by navArgs()
+        viewModelFactory.create(args.habitId)
+    }
+
     private val binding: FragmentHabitEditorBinding by viewBinding(createMethod = CreateMethod.INFLATE)
 
     private val gradient = HSVGradient()
 
     private var habitId: String? = null
-    private var creationTime: Long? = null
     private var doneDates: List<Long>? = null
+
+    override fun onAttach(context: Context) {
+        (activity as MainActivity).featureComponent.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,31 +67,33 @@ class HabitEditorFragment : Fragment() {
         binding.errorView.errorButton.setOnClickListener {
             viewModel.obtainEvent(HabitEditorEvent.OnReloadButtonPressed)
         }
-        binding.editorView.saveButton.setOnClickListener {
-            val habit = collectHabit()
-            if (habit == null) {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.fill_all_fields),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                viewModel.obtainEvent(HabitEditorEvent.OnSaveHabitPressed(habit))
-            }
-        }
-        binding.editorView.radioGroup.setOnCheckedChangeListener { _, i ->
-            when (i) {
-                R.id.good_type_button -> {
-                    binding.editorView.goodTypeButton.isChecked = true
-                    binding.editorView.badTypeButton.isChecked = false
-                }
-                R.id.bad_type_button -> {
-                    binding.editorView.badTypeButton.isChecked = true
-                    binding.editorView.goodTypeButton.isChecked = false
+        with(binding.editorView) {
+            saveButton.setOnClickListener {
+                val habit = collectHabit()
+                if (habit == null) {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.fill_all_fields),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    viewModel.obtainEvent(HabitEditorEvent.OnSaveHabitPressed(habit))
                 }
             }
+            radioGroup.setOnCheckedChangeListener { _, i ->
+                when (i) {
+                    R.id.good_type_button -> {
+                        goodTypeButton.isChecked = true
+                        badTypeButton.isChecked = false
+                    }
+                    R.id.bad_type_button -> {
+                        badTypeButton.isChecked = true
+                        goodTypeButton.isChecked = false
+                    }
+                }
+            }
+            colorView.setBackgroundColor(gradient.getColorAt(seekBar.progress))
         }
-        binding.editorView.colorView.setBackgroundColor(gradient.getColorAt(binding.editorView.seekBar.progress))
 
         setupPrioritySelector()
         configureColorPicker()
@@ -131,16 +147,14 @@ class HabitEditorFragment : Fragment() {
     private fun collectHabit(): HabitEntity? {
         if (!checkFields()) return null
         with(binding.editorView) {
-            val habitType = with(binding.editorView) {
-                when {
-                    goodTypeButton.isChecked -> {
-                        HabitType.Good
-                    }
-                    badTypeButton.isChecked -> {
-                        HabitType.Bad
-                    }
-                    else -> error("Not found")
+            val habitType = when {
+                goodTypeButton.isChecked -> {
+                    HabitType.Good
                 }
+                badTypeButton.isChecked -> {
+                    HabitType.Bad
+                }
+                else -> error("Not found")
             }
             return HabitEntity(
                 id = habitId ?: UUID.randomUUID().toString(),
@@ -151,7 +165,7 @@ class HabitEditorFragment : Fragment() {
                 frequency = habitFrequency.text.toString().toInt(),
                 priority = habitPriority.selectedItemPosition,
                 color = gradient.getColorAt(seekBar.progress),
-                date = creationTime ?: System.currentTimeMillis(),
+                date = System.currentTimeMillis(),
                 doneDates = doneDates ?: emptyList()
             )
         }
@@ -182,7 +196,6 @@ class HabitEditorFragment : Fragment() {
                                 showEditor(viewState.isUploading)
                                 setupHabit(viewState.habit)
                                 habitId = viewState.habit.id
-                                creationTime = viewState.habit.date
                                 doneDates = viewState.habit.doneDates
                             }
                             is HabitEditorViewState.Error -> {
@@ -200,6 +213,13 @@ class HabitEditorFragment : Fragment() {
                         when (action) {
                             HabitEditorAction.PopBackStack -> {
                                 findNavController().navigateUp()
+                            }
+                            is HabitEditorAction.ShowToast -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(action.massageResId),
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
                         }
                     }

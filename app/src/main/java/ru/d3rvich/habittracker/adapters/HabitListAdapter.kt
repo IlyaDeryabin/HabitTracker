@@ -9,16 +9,18 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.d3rvich.habittracker.R
 import ru.d3rvich.habittracker.databinding.HabitListItemBinding
-import ru.d3rvich.habittracker.entity.HabitEntity
-import ru.d3rvich.habittracker.entity.HabitType
+import ru.d3rvich.habittracker.domain.entity.HabitEntity
+import ru.d3rvich.habittracker.domain.entity.HabitType
 
-class HabitListAdapter(private val onItemClick: (String) -> Unit) :
-    ListAdapter<HabitEntity, HabitListAdapter.HabitListViewHolder>(HabitListItemCallback()) {
+class HabitListAdapter(
+    private val onItemClick: (String) -> Unit,
+    private val onLongClick: (String) -> Unit,
+) : ListAdapter<HabitEntity, HabitListAdapter.HabitListViewHolder>(HabitListItemCallback()) {
 
     class HabitListViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         private val binding = HabitListItemBinding.bind(view)
 
-        fun bind(habit: HabitEntity, onItemClick: (String) -> Unit) {
+        fun bind(habit: HabitEntity, onItemClick: (String) -> Unit, onLongClick: (String) -> Unit) {
             with(binding) {
                 habitTitle.text = habit.title
                 habitDescription.text = habit.description
@@ -47,6 +49,10 @@ class HabitListAdapter(private val onItemClick: (String) -> Unit) :
                 habitItem.setOnClickListener {
                     onItemClick(habit.id)
                 }
+                habitItem.setOnLongClickListener {
+                    onLongClick(habit.id)
+                    true
+                }
             }
         }
     }
@@ -60,7 +66,7 @@ class HabitListAdapter(private val onItemClick: (String) -> Unit) :
 
     override fun onBindViewHolder(holder: HabitListViewHolder, position: Int) {
         val habit = getItem(position)
-        holder.bind(habit, onItemClick)
+        holder.bind(habit, onItemClick, onLongClick)
     }
 
     class HabitListItemCallback : DiffUtil.ItemCallback<HabitEntity>() {

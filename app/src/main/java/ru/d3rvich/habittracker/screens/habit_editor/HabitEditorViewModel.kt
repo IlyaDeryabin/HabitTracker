@@ -1,29 +1,31 @@
 package ru.d3rvich.habittracker.screens.habit_editor
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
+import ru.d3rvich.habittracker.R
 import ru.d3rvich.habittracker.base.BaseViewModel
-import ru.d3rvich.habittracker.data.HabitStore
+import ru.d3rvich.habittracker.domain.entity.NewHabitEntity
+import ru.d3rvich.habittracker.domain.interactors.HabitInteractor
+import ru.d3rvich.habittracker.domain.models.OperationStatus
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorAction
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorEvent
 import ru.d3rvich.habittracker.screens.habit_editor.model.HabitEditorViewState
 
-class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
-    BaseViewModel<HabitEditorEvent, HabitEditorViewState, HabitEditorAction>() {
+class HabitEditorViewModel @AssistedInject constructor(
+    @Assisted("habitId") private val habitId: String? = null,
+    private val habitInteractor: HabitInteractor,
+) : BaseViewModel<HabitEditorEvent, HabitEditorViewState, HabitEditorAction>() {
     override fun createInitialState(): HabitEditorViewState {
         return HabitEditorViewState.Loading
     }
 
-    private var habitId: String? = null
-
     init {
-        habitId = savedStateHandle.get(HABIT_ID_KEY)
-        if (habitId == null) {
-            setState(HabitEditorViewState.Creator())
-        } else {
-            loadData(habitId!!)
-        }
+        habitId?.let {
+            loadData(it)
+        } ?: setState(HabitEditorViewState.Creator())
     }
 
     override fun obtainEvent(event: HabitEditorEvent) {
@@ -37,7 +39,7 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
 
     private fun loadData(habitId: String) {
         viewModelScope.launch {
-            val habit = HabitStore.getHabitBy(habitId)
+            val habit = habitInteractor.getHabitBy(habitId)
             setState(HabitEditorViewState.Editor(habit))
         }
     }
@@ -51,7 +53,21 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
             is HabitEditorEvent.OnSaveHabitPressed -> {
                 viewModelScope.launch {
                     setState(viewState.copy(isUploading = true))
-                    HabitStore.addHabit(event.habit)
+                    val newHabit = with(event.habit) {
+                        NewHabitEntity(title = title,
+                            description = description,
+                            type = type,
+                            count = count,
+                            frequency = frequency,
+                            priority = priority,
+                            color = color,
+                            date = date,
+                            doneDates = doneDates)
+                    }
+                    val status = habitInteractor.createHabit(newHabit)
+                    if (status is OperationStatus.Failure) {
+                        sendAction { HabitEditorAction.ShowToast(R.string.check_internet_connection) }
+                    }
                     sendAction { HabitEditorAction.PopBackStack }
                 }
             }
@@ -64,7 +80,10 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
             is HabitEditorEvent.OnSaveHabitPressed -> {
                 viewModelScope.launch {
                     setState(viewState.copy(habit = event.habit, isUploading = true))
-                    HabitStore.editHabit(event.habit)
+                    val status = habitInteractor.editHabit(event.habit)
+                    if (status is OperationStatus.Failure) {
+                        sendAction { HabitEditorAction.ShowToast(R.string.check_internet_connection) }
+                    }
                     sendAction { HabitEditorAction.PopBackStack }
                 }
             }
@@ -76,13 +95,14 @@ class HabitEditorViewModel(savedStateHandle: SavedStateHandle) :
         when (event) {
             HabitEditorEvent.OnReloadButtonPressed -> {
                 requireNotNull(habitId)
-                loadData(habitId!!)
+                loadData(habitId)
             }
             else -> unexpectedEventError(event, viewState)
         }
     }
 
-    companion object {
-        const val HABIT_ID_KEY = "habitId"
+    @AssistedFactory
+    interface Factory {
+        fun create(@Assisted("habitId") habitId: String? = null): HabitEditorViewModel
     }
 }
