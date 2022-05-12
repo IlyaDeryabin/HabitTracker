@@ -6,7 +6,7 @@
     app:startDestination="@id/habit_list_fragment">
     <fragment
         android:id="@+id/habit_list_fragment"
-        android:name="ru.d3rvich.habittracker.screens.habit_list.HabitListFragment"
+        android:name="ru.d3rvich.habittracker.presenter.screens.habit_list.HabitListFragment"
         android:label="@string/my_habits"
         tools:layout="@layout/fragment_habit_list">
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/habit_editor_fragment"
-        android:name="ru.d3rvich.habittracker.screens.habit_editor.HabitEditorFragment"
+        android:name="ru.d3rvich.habittracker.presenter.screens.habit_editor.HabitEditorFragment"
         android:label="@string/habit_editor"
         tools:layout="@layout/fragment_habit_editor">
         <argument
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/about_fragment"
-        android:name="ru.d3rvich.habittracker.screens.about.AboutFragment"
+        android:name="ru.d3rvich.habittracker.presenter.screens.about.AboutFragment"
         android:label="@string/about_application_title"
         tools:layout="@layout/fragment_about" />
 </navigation>

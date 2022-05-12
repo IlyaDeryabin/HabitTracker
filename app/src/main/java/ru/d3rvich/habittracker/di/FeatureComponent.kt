@@ -1,14 +1,14 @@
 package ru.d3rvich.habittracker.di
 
 import dagger.Subcomponent
-import ru.d3rvich.habittracker.screens.habit_editor.HabitEditorFragment
-import ru.d3rvich.habittracker.screens.habit_list.HabitListFragment
-import ru.d3rvich.habittracker.screens.habit_list.view.FilterFragment
+import ru.d3rvich.habittracker.presenter.screens.habit_editor.HabitEditorFragment
+import ru.d3rvich.habittracker.presenter.screens.habit_list.HabitListFragment
+import ru.d3rvich.habittracker.presenter.screens.habit_list.view.FilterFragment
 import javax.inject.Scope
 
 @Subcomponent
 @ActivityScope
-interface FeatureComponent {
+internal interface FeatureComponent {
 
     @Subcomponent.Builder
     interface Builder {

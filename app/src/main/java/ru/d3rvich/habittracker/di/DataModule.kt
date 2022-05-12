@@ -12,7 +12,7 @@ import ru.d3rvich.habittracker.domain.repositories.HabitRepository
 object DataModule {
 
     @Provides
-    fun provideHabitLocalRepositoryImpl(
+    fun provideHabitRepository(
         context: Context,
         habitDatabase: HabitDatabase,
         habitApiService: HabitApiService,
